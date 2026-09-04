@@ -242,21 +242,24 @@ const COMPATIBLE_DEVICES = [
     subtitle: "FAT ou SLIM • 100% via Pen Drive ou HD",
     desc: "Não importa se o leitor óptico do seu videogame está queimado ou se o console é bloqueado. O sistema roda tudo digital via OPL direto no Pen Drive ou Memory Card.",
     badge: "CONSOLE NATIVO",
-    img: "/icons/ps2_real.jpg"
+    img: "/icons/ps2_real.png",
+    imgPos: "object-center"
   },
   {
     title: "No Computador ou Notebook",
     subtitle: "Windows / Mac • Jogue em HD ou 4K",
     desc: "Emuladores leves já pré-configurados. Você só precisa baixar, dar dois cliques e jogar. Compatível com teclado ou qualquer controle USB/Bluetooth.",
     badge: "PC & NOTEBOOK",
-    img: "/icons/pc_setup.jpg"
+    img: "/icons/pc_setup.png",
+    imgPos: "object-top"
   },
   {
     title: "No Seu Smartphone (Celular)",
     subtitle: "Android & iOS • Na Palma da Sua Mão",
     desc: "Leve o PlayStation 2 para qualquer lugar. Roda com extrema fluidez com controles touch na tela ou pareado com controles sem fio Bluetooth.",
     badge: "MOBILE PORTÁTIL",
-    img: "/icons/celular_setup.jpg"
+    img: "/icons/celular_setup.png",
+    imgPos: "object-top"
   }
 ];
 
@@ -596,7 +599,7 @@ export default function App() {
                   <img 
                     src={dev.img} 
                     alt={dev.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className={`w-full h-full object-cover ${dev.imgPos || "object-center"} transition-transform duration-500 group-hover:scale-105`}
                     loading="lazy"
                   />
                   <span className="absolute top-2.5 left-2.5 xs:top-3 xs:left-3 px-2 xs:px-2.5 py-0.5 xs:py-1 rounded-md bg-black/85 backdrop-blur-md border border-white/10 text-[9px] xs:text-[10px] font-chakra font-bold text-[#00d2ff] tracking-wider uppercase">
