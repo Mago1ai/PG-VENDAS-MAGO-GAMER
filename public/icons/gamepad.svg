@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Flaticon Flat Color Line-Art: Gamepad with Red Wire (Exact replica of Row 2 Icon 1) -->
+  <g stroke="#1F2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Red Wire Loop at Top -->
+    <path d="M 64 36 C 50 18, 78 18, 64 36" fill="none" stroke="#EF4444" stroke-width="4" />
+    
+    <!-- Gamepad Body -->
+    <path d="M 32 46 C 24 46, 16 56, 16 78 C 16 94, 26 100, 36 100 C 44 100, 48 92, 54 86 C 60 82, 68 82, 74 86 C 80 92, 84 100, 92 100 C 102 100, 112 94, 112 78 C 112 56, 104 46, 96 46 Z" fill="#64748B" />
+
+    <!-- D-Pad Left -->
+    <path d="M 30 62 h 4 v -4 h 4 v 4 h 4 v 4 h -4 v 4 h -4 v -4 h -4 Z" fill="#1F2937" />
+
+    <!-- Action Buttons Right -->
+    <circle cx="94" cy="58" r="3" fill="#EF4444" stroke="none" />
+    <circle cx="102" cy="66" r="3" fill="#F59E0B" stroke="none" />
+    <circle cx="86" cy="66" r="3" fill="#10B981" stroke="none" />
+    <circle cx="94" cy="74" r="3" fill="#3B82F6" stroke="none" />
+
+    <!-- Dual Thumbsticks -->
+    <circle cx="48" cy="80" r="7" fill="#1F2937" />
+    <circle cx="80" cy="80" r="7" fill="#1F2937" />
+  </g>
+</svg>

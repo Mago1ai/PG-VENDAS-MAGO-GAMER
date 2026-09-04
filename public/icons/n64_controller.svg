@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- RomM Style: Nintendo 64 Controller Icon -->
+  <g stroke="#1F2937" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- N64 3-Prong Body -->
+    <path d="M 28 36 C 20 36, 16 50, 20 86 C 22 96, 30 102, 38 98 C 44 94, 46 80, 48 70 L 52 70 L 54 106 C 56 114, 72 114, 74 106 L 76 70 L 80 70 C 82 80, 84 94, 90 98 C 98 102, 106 96, 108 86 C 112 50, 108 36, 100 36 Z" fill="#E5E7EB" />
+    
+    <!-- Analog Stick Center -->
+    <circle cx="64" cy="56" r="9" fill="#9CA3AF" />
+    <circle cx="64" cy="56" r="5" fill="#4B5563" />
+
+    <!-- D-Pad Left -->
+    <path d="M 30 52 h 4 v -4 h 4 v 4 h 4 v 4 h -4 v 4 h -4 v -4 h -4 Z" fill="#1F2937" />
+
+    <!-- A and B Buttons Right -->
+    <circle cx="86" cy="62" r="4" fill="#3B82F6" stroke="none" />
+    <circle cx="94" cy="56" r="3.5" fill="#10B981" stroke="none" />
+
+    <!-- C-Buttons (Yellow cluster) -->
+    <circle cx="98" cy="42" r="2.5" fill="#F59E0B" stroke="none" />
+    <circle cx="104" cy="48" r="2.5" fill="#F59E0B" stroke="none" />
+    <circle cx="92" cy="48" r="2.5" fill="#F59E0B" stroke="none" />
+    <circle cx="98" cy="54" r="2.5" fill="#F59E0B" stroke="none" />
+
+    <!-- Start Button Red -->
+    <circle cx="64" cy="42" r="3.5" fill="#EF4444" stroke="none" />
+  </g>
+</svg>

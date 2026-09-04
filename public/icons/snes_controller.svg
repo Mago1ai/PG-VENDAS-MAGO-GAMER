@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- RomM Style: Super Nintendo (SNES) Controller Icon -->
+  <g stroke="#1F2937" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Rounded Oval Body -->
+    <rect x="18" y="42" width="92" height="44" rx="22" fill="#D1D5DB" />
+    
+    <!-- Left D-Pad -->
+    <path d="M 32 58 h 5 v -5 h 5 v 5 h 5 v 5 h -5 v 5 h -5 v -5 h -5 Z" fill="#1F2937" />
+
+    <!-- Center Select / Start -->
+    <rect x="54" y="66" width="8" height="4" rx="1.5" fill="#4B5563" stroke="none" transform="rotate(-30 58 68)" />
+    <rect x="66" y="66" width="8" height="4" rx="1.5" fill="#4B5563" stroke="none" transform="rotate(-30 70 68)" />
+
+    <!-- Right Action Buttons (Purple SNES US Cluster) -->
+    <circle cx="94" cy="56" r="4.5" fill="#8B5CF6" stroke="none" />
+    <circle cx="102" cy="64" r="4.5" fill="#C4B5FD" stroke="none" />
+    <circle cx="86" cy="64" r="4.5" fill="#C4B5FD" stroke="none" />
+    <circle cx="94" cy="72" r="4.5" fill="#8B5CF6" stroke="none" />
+  </g>
+</svg>

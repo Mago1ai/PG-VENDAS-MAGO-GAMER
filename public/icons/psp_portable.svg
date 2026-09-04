@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- RomM Style: PlayStation Portable (PSP) Icon -->
+  <g stroke="#1F2937" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Sleek Rounded Body -->
+    <rect x="14" y="44" width="100" height="40" rx="16" fill="#1F2937" />
+    
+    <!-- Central Widescreen -->
+    <rect x="38" y="48" width="52" height="32" rx="3" fill="#3B82F6" stroke="#1F2937" stroke-width="1.5" />
+
+    <!-- Left D-Pad -->
+    <circle cx="26" cy="60" r="2.5" fill="#9CA3AF" stroke="none" />
+    <circle cx="26" cy="68" r="2.5" fill="#9CA3AF" stroke="none" />
+    <circle cx="22" cy="64" r="2.5" fill="#9CA3AF" stroke="none" />
+    <circle cx="30" cy="64" r="2.5" fill="#9CA3AF" stroke="none" />
+
+    <!-- Right Action Buttons -->
+    <circle cx="102" cy="58" r="2" fill="#60A5FA" stroke="none" />
+    <circle cx="106" cy="64" r="2" fill="#F87171" stroke="none" />
+    <circle cx="98" cy="64" r="2" fill="#34D399" stroke="none" />
+    <circle cx="102" cy="70" r="2" fill="#FBBF24" stroke="none" />
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="lbBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#311042" />
+    </linearGradient>
+    <linearGradient id="lbAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="90" fill="url(#lbBg)" stroke="rgba(168, 85, 247, 0.4)" stroke-width="8"/>
+
+  <!-- 3D Arcade Box / Launch symbol -->
+  <g transform="translate(136, 75)">
+    <path d="M 120 30 L 220 80 L 120 130 L 20 80 Z" fill="#c084fc" />
+    <path d="M 20 80 L 120 130 V 220 L 20 170 Z" fill="#7e22ce" />
+    <path d="M 220 80 L 120 130 V 220 L 220 170 Z" fill="#a855f7" />
+    
+    <!-- Fast Forward Play Arrows -->
+    <polygon points="85,150 125,175 85,200" fill="#00ff88" />
+    <polygon points="120,150 160,175 120,200" fill="#00ff88" />
+  </g>
+
+  <!-- LAUNCHBOX APK BADGE -->
+  <rect x="126" y="400" width="260" height="46" rx="12" fill="url(#lbAccent)" />
+  <text x="256" y="431" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="19" fill="#ffffff" text-anchor="middle" letter-spacing="2">LAUNCHBOX APK</text>
+</svg>

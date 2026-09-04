@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Flaticon Flat Color Line-Art: PlayStation 2 Console -->
+  <g stroke="#1F2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main Console Base -->
+    <rect x="28" y="44" width="72" height="52" rx="4" fill="#374151" />
+    <rect x="28" y="44" width="72" height="12" rx="2" fill="#1F2937" />
+    <!-- Disc Slot -->
+    <line x1="36" y1="50" x2="72" y2="50" stroke="#60A5FA" stroke-width="2" />
+    <!-- Power & Reset Buttons -->
+    <circle cx="82" cy="50" r="2" fill="#10B981" stroke="none" />
+    <circle cx="89" cy="50" r="2" fill="#3B82F6" stroke="none" />
+    <!-- Memory Card & Controller Slots -->
+    <rect x="36" y="66" width="24" height="8" rx="1.5" fill="#111827" />
+    <rect x="68" y="66" width="24" height="8" rx="1.5" fill="#111827" />
+    <rect x="36" y="78" width="24" height="10" rx="1.5" fill="#1F2937" />
+    <rect x="68" y="78" width="24" height="10" rx="1.5" fill="#1F2937" />
+    <!-- Stand -->
+    <path d="M 24 96 L 104 96 L 96 102 L 32 102 Z" fill="#2563EB" />
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Flaticon Flat Color Line-Art: Super Nintendo Console -->
+  <g stroke="#1F2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main Body -->
+    <rect x="24" y="38" width="80" height="52" rx="6" fill="#E5E7EB" />
+    <rect x="36" y="44" width="56" height="14" rx="2" fill="#9CA3AF" />
+    <!-- Cartridge Slot -->
+    <rect x="42" y="48" width="44" height="6" fill="#4B5563" />
+    <!-- Purple Power Switches -->
+    <rect x="32" y="66" width="12" height="16" rx="2" fill="#8B5CF6" />
+    <rect x="84" y="66" width="12" height="16" rx="2" fill="#8B5CF6" />
+    <!-- Controller Ports -->
+    <rect x="48" y="72" width="14" height="10" rx="2" fill="#6B7280" />
+    <rect x="66" y="72" width="14" height="10" rx="2" fill="#6B7280" />
+  </g>
+</svg>

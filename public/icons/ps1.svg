@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Flaticon Flat Color Line-Art: PlayStation 1 Console -->
+  <g stroke="#1F2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main Console Body -->
+    <rect x="22" y="38" width="84" height="56" rx="6" fill="#D1D5DB" />
+    <!-- CD Lid -->
+    <circle cx="64" cy="62" r="20" fill="#9CA3AF" />
+    <circle cx="64" cy="62" r="8" fill="#4B5563" />
+    <!-- Power & Open Buttons -->
+    <circle cx="34" cy="62" r="5" fill="#E5E7EB" />
+    <circle cx="94" cy="62" r="5" fill="#E5E7EB" />
+    <!-- Controller Port Slots -->
+    <rect x="32" y="80" width="28" height="8" rx="2" fill="#6B7280" />
+    <rect x="68" y="80" width="28" height="8" rx="2" fill="#6B7280" />
+  </g>
+</svg>
