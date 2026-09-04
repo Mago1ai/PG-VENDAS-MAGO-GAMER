@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   
   h1, h2, h3, .font-display {
@@ -10,116 +10,84 @@
   }
 }
 
-/* Custom Animations & Effects */
-
+/* Animações e Shimmers Otimizados por GPU */
 @keyframes shimmer {
   0% {
-    transform: translateX(-150%);
-  }
-  50% {
-    transform: translateX(150%);
+    transform: translateX(-100%);
   }
   100% {
-    transform: translateX(150%);
+    transform: translateX(100%);
   }
 }
 
-.animate-shimmer {
+.skeleton-shimmer {
   position: relative;
   overflow: hidden;
+  background-color: #0c101c;
 }
 
-.animate-shimmer::after {
+.skeleton-shimmer::after {
   content: '';
   position: absolute;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  transform: translateX(-100%);
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(255, 255, 255, 0.08) 20%,
-    rgba(255, 255, 255, 0.25) 60%,
-    transparent 100%
+    rgba(255, 255, 255, 0) 0,
+    rgba(0, 210, 255, 0.08) 35%,
+    rgba(0, 210, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
-  transform: translateX(-100%);
-  animation: shimmer 4s infinite ease-in-out;
+  animation: shimmer 1.8s infinite ease-in-out;
 }
 
-/* Neon Green Pulse Glow for Primary CTA */
-@keyframes neon-pulse {
+/* Pulso Neon Verde Triângulo PS2 (#00e676 / #10b981) */
+@keyframes neon-pulse-green {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4), 0 0 3px rgba(16, 185, 129, 0.2);
-    border-color: rgba(16, 185, 129, 0.8);
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.4), 0 0 3px rgba(0, 230, 118, 0.2);
   }
   50% {
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.8), 0 0 10px rgba(16, 185, 129, 0.4);
-    border-color: rgba(52, 211, 153, 1);
+    box-shadow: 0 0 32px rgba(0, 230, 118, 0.75), 0 0 12px rgba(0, 230, 118, 0.5);
   }
 }
 
-.neon-pulse-btn {
-  animation: neon-pulse 2s infinite ease-in-out;
+.neon-btn-ps2 {
+  animation: neon-pulse-green 2.4s infinite ease-in-out;
 }
 
-/* Luxury Card Highlight */
-.glow-card-emerald {
-  position: relative;
-}
-.glow-card-emerald::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(to bottom right, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.05));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.glow-card-purple {
-  position: relative;
-}
-.glow-card-purple::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(to bottom right, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0.05));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* Soft floating elements */
-@keyframes float {
+/* Pulso Azul PlayStation */
+@keyframes neon-pulse-blue {
   0%, 100% {
-    transform: translateY(0px);
+    box-shadow: 0 0 15px rgba(0, 112, 209, 0.3);
   }
   50% {
-    transform: translateY(-8px);
+    box-shadow: 0 0 28px rgba(0, 210, 255, 0.6);
   }
 }
 
-.animate-float {
-  animation: float 5s infinite ease-in-out;
+.neon-border-blue {
+  animation: neon-pulse-blue 3s infinite ease-in-out;
 }
 
-/* Scroll Snap/Smoothness */
+/* Suavidade Global */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbars but keep functionality */
+/* Scrollbars Invisíveis */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Performance de Aceleração Gráfica */
+.gpu-layer {
+  transform: translateZ(0);
+  will-change: transform;
 }
