@@ -2,12 +2,20 @@
 
 @layer base {
   body {
-    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   
   h1, h2, h3, .font-display {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Chakra Petch', 'Space Grotesk', sans-serif;
   }
+}
+
+.font-chakra {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
 }
 
 /* Animações e Shimmers Otimizados por GPU */

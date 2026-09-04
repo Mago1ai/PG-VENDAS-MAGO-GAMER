@@ -477,6 +477,11 @@ export default function App() {
       <div className="absolute top-1/3 right-6 w-[450px] h-[450px] bg-[#00d2ff]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/3 left-6 w-[500px] h-[500px] bg-[#003791]/15 rounded-full blur-[160px] pointer-events-none" />
 
+      {/* BARRA DE AVISO SUPERIOR (ESTILO FIRMWARE RETRO) */}
+      <div className="bg-[#002868]/90 border-b border-[#0070d1]/40 text-xs sm:text-sm py-2 px-4 text-center font-chakra text-zinc-200 tracking-wide">
+        ⚡ SERVIDORES DEDICADOS NA NUVEM • COMPATÍVEL COM OPL (PS2), CELULAR (ANDROID/IOS) E PC
+      </div>
+
       {/* --- HEADER: BARRA DE NAVEGAÇÃO & CONTROLES SENSORIAIS --- */}
       <header className="border-b border-[#0070d1]/25 bg-[#06070b]/90 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -573,8 +578,27 @@ export default function App() {
           Lembra do barulho do memory card lendo no escuro e a tela de blocos se formando? Não é sobre jogos. É sobre quem nós éramos.
         </p>
 
-        {/* Botão de Disparo do Som com Ondas Visuais */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+        {/* Badges de Compatibilidade Rápida (Console, Smartphone, PC) */}
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-xl mx-auto my-7 text-center">
+          <div className="bg-[#0a0e1a]/90 border border-[#0070d1]/30 p-3 sm:p-3.5 rounded-xl hover:border-[#00d2ff]/50 transition-all">
+            <p className="font-chakra text-[10px] sm:text-xs text-zinc-400 font-bold uppercase tracking-wider">CONSOLE</p>
+            <p className="font-chakra font-black text-xs sm:text-base text-white mt-1">100% OPL</p>
+            <span className="text-[9px] sm:text-[10px] text-[#00e676] font-mono">Fat & Slim</span>
+          </div>
+          <div className="bg-[#0a0e1a]/90 border border-[#0070d1]/30 p-3 sm:p-3.5 rounded-xl hover:border-[#00d2ff]/50 transition-all">
+            <p className="font-chakra text-[10px] sm:text-xs text-zinc-400 font-bold uppercase tracking-wider">SMARTPHONE</p>
+            <p className="font-chakra font-black text-xs sm:text-base text-white mt-1">Android & iOS</p>
+            <span className="text-[9px] sm:text-[10px] text-[#00d2ff] font-mono">Controle Bluetooth</span>
+          </div>
+          <div className="bg-[#0a0e1a]/90 border border-[#0070d1]/30 p-3 sm:p-3.5 rounded-xl hover:border-[#00d2ff]/50 transition-all">
+            <p className="font-chakra text-[10px] sm:text-xs text-zinc-400 font-bold uppercase tracking-wider">COMPUTADOR</p>
+            <p className="font-chakra font-black text-xs sm:text-base text-white mt-1">PC / Notebook</p>
+            <span className="text-[9px] sm:text-[10px] text-[#00e676] font-mono">Pré-Configurado</span>
+          </div>
+        </div>
+
+        {/* Botão de Disparo do Som com Ondas Visuais & CTA */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-3">
           <button
             onClick={handlePlayBoot}
             className={`group inline-flex items-center gap-3 px-6 py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all ${
@@ -586,7 +610,7 @@ export default function App() {
             <div className="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center">
               <Play className={`w-4 h-4 ${isPlayingAudio ? "text-black fill-black" : "text-[#00d2ff] fill-[#00d2ff]"}`} />
             </div>
-            <span className="font-mono tracking-wide">
+            <span className="font-chakra tracking-wide">
               {isPlayingAudio ? "Ecoando o Boot do PS2..." : "Ouvir o Som de Boot no Escuro"}
             </span>
             {isPlayingAudio && (
@@ -600,15 +624,31 @@ export default function App() {
 
           <button
             onClick={() => {
-              const el = document.getElementById("galeria");
-              el?.scrollIntoView({ behavior: "smooth" });
+              setCheckoutStep("form");
+              setShowCheckoutModal(true);
             }}
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-transparent hover:bg-white/5 text-zinc-300 font-semibold text-sm sm:text-base border border-zinc-700/80 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#0070d1] hover:bg-[#005be3] text-white font-chakra font-bold text-sm sm:text-base shadow-[0_0_25px_rgba(0,112,209,0.5)] transition-all"
           >
-            <BookOpen className="w-4 h-4 text-[#00e676]" />
-            <span>Explorar as Memórias Preservadas</span>
+            <Sparkles className="w-4 h-4 fill-white" />
+            <span>Garantir Acesso VIP (R$ 29,90)</span>
             <ArrowRight className="w-4 h-4" />
           </button>
+        </div>
+
+        {/* Micro Selos de Confiança */}
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-zinc-400 font-chakra mb-10">
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676]" />
+            Acesso Vitalício
+          </span>
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676]" />
+            Download Imediato
+          </span>
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676]" />
+            Suporte no WhatsApp
+          </span>
         </div>
 
         {/* Animação Canvas: A Sequência de Boot do PS2 em 3D */}
@@ -617,6 +657,22 @@ export default function App() {
           <p className="text-xs font-mono text-zinc-500 mt-3 text-center">
             * Animação nativa de renderização dos monolitos da BIOS do PlayStation 2 rodando a 60 quadros por segundo.
           </p>
+        </div>
+
+        {/* ESTATÍSTICAS SOCIAIS E PROVA DA COMUNIDADE */}
+        <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/80 mt-12 pt-8 text-center max-w-4xl mx-auto font-chakra">
+          <div>
+            <p className="text-2xl sm:text-3xl font-bold text-white tracking-wider">+1.480</p>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-1">Jogadores Ativos</p>
+          </div>
+          <div>
+            <p className="text-2xl sm:text-3xl font-bold text-yellow-400 tracking-wider">★ 4.9/5</p>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-1">Avaliação dos Membros</p>
+          </div>
+          <div>
+            <p className="text-2xl sm:text-3xl font-bold text-[#00e676] tracking-wider">100%</p>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-1">Testado e Funcional</p>
+          </div>
         </div>
       </section>
 
@@ -713,6 +769,70 @@ export default function App() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Chamada para Lista Completa de Jogos */}
+        <div className="mt-12 text-center">
+          <p className="text-xs sm:text-sm font-chakra text-zinc-400 mb-4 tracking-wider">
+            + Mais de 1.000 títulos clássicos de PS2 testados e disponíveis para acesso imediato.
+          </p>
+          <button
+            onClick={() => {
+              setCheckoutStep("form");
+              setShowCheckoutModal(true);
+            }}
+            className="inline-flex items-center gap-2 bg-[#0c1220] hover:bg-[#152038] border border-[#0070d1]/40 hover:border-[#00d2ff] text-white px-7 py-3 rounded-xl font-chakra font-bold text-xs sm:text-sm transition-all shadow-[0_0_20px_rgba(0,112,209,0.2)]"
+          >
+            <span>VER LISTA COMPLETA NA NUVEM VIP</span>
+            <ArrowRight className="w-4 h-4 text-[#00d2ff]" />
+          </button>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* NOVO: COMO FUNCIONA EM 3 PASSOS SIMPLES (DO SEU MODELO) */}
+      {/* ========================================================================= */}
+      <section className="py-16 sm:py-24 border-t border-zinc-800/80 max-w-5xl mx-auto px-4">
+        <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
+          <p className="text-xs font-chakra font-bold text-[#00d2ff] uppercase tracking-widest">Sem Burocracia</p>
+          <h2 className="text-3xl sm:text-4xl font-chakra font-bold text-white tracking-tight">
+            Como Funciona em 3 Passos Simples
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400">
+            Do primeiro clique até o jogo rodando na sua tela em minutos.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="bg-[#090c15] border border-[#0070d1]/30 hover:border-[#00d2ff]/60 p-6 rounded-2xl relative transition-all">
+            <div className="w-10 h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-lg mb-4">
+              1
+            </div>
+            <h3 className="font-chakra font-bold text-lg text-white mb-2">Acesse a Nuvem VIP</h3>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              Você recebe o link direto imediatamente por e-mail e WhatsApp. Servidores dedicados na nuvem, sem anúncios chatos ou links falsos.
+            </p>
+          </div>
+
+          <div className="bg-[#090c15] border border-[#0070d1]/30 hover:border-[#00d2ff]/60 p-6 rounded-2xl relative transition-all">
+            <div className="w-10 h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-lg mb-4">
+              2
+            </div>
+            <h3 className="font-chakra font-bold text-lg text-white mb-2">Passe com 1 Clique</h3>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              Use os arquivos direto no Pen Drive (OPL) do videogame, ou configure no seu celular ou computador com nossos vídeos guiados de 3 minutos.
+            </p>
+          </div>
+
+          <div className="bg-[#090c15] border border-[#0070d1]/30 hover:border-[#00d2ff]/60 p-6 rounded-2xl relative transition-all">
+            <div className="w-10 h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-lg mb-4">
+              3
+            </div>
+            <h3 className="font-chakra font-bold text-lg text-white mb-2">Pegue o Controle e Jogue</h3>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              Ligue o aparelho e volte no tempo. Memory card, saves salvando e jogos funcionando exatamente como no console original.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -935,53 +1055,83 @@ export default function App() {
                 Este não é um produto de massa nem um comércio frio. É uma iniciativa mantida por jogadores dedicados para garantir que esses servidores nunca desliguem e que essas obras nunca se percam no tempo.
               </p>
 
-              {/* O que o apoio cobre */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <div className="flex items-center gap-2 text-xs text-zinc-200 bg-black/40 p-3 rounded-xl border border-zinc-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#00e676] shrink-0" />
-                  <span>Tráfego Ilimitado em Alta Velocidade</span>
+              {/* O Que Você Vai Receber (Checklist Detalhado do Modelo) */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-start gap-3 bg-black/40 p-3 rounded-xl border border-zinc-800">
+                  <span className="text-[#00d2ff] font-bold text-sm">✔</span>
+                  <span className="text-xs sm:text-sm text-zinc-200">
+                    <strong className="text-white">Catálogo VIP:</strong> Mais de 1.000 jogos de PS2 selecionados e organizados por ordem alfabética.
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-200 bg-black/40 p-3 rounded-xl border border-zinc-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#00e676] shrink-0" />
-                  <span>Atualizações Constantes do Acervo</span>
+                <div className="flex items-start gap-3 bg-black/40 p-3 rounded-xl border border-zinc-800">
+                  <span className="text-[#00d2ff] font-bold text-sm">✔</span>
+                  <span className="text-xs sm:text-sm text-zinc-200">
+                    <strong className="text-white">Bomba Patch Atualizado:</strong> Com transferências recentes e narração clássica brasileira.
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-200 bg-black/40 p-3 rounded-xl border border-zinc-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#00e676] shrink-0" />
-                  <span>Suporte Humano de Jogador para Jogador</span>
+                <div className="flex items-start gap-3 bg-black/40 p-3 rounded-xl border border-zinc-800">
+                  <span className="text-[#00d2ff] font-bold text-sm">✔</span>
+                  <span className="text-xs sm:text-sm text-zinc-200">
+                    <strong className="text-white">Guia Completo OPL:</strong> Vídeo de 3 minutos ensinando como colocar no Pen Drive sem erro.
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-200 bg-black/40 p-3 rounded-xl border border-zinc-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#00e676] shrink-0" />
-                  <span>Acesso Imediato ao Token VIP</span>
+                <div className="flex items-start gap-3 bg-black/40 p-3 rounded-xl border border-zinc-800">
+                  <span className="text-[#00d2ff] font-bold text-sm">✔</span>
+                  <span className="text-xs sm:text-sm text-zinc-200">
+                    <strong className="text-white">Instalação Celular e PC:</strong> Emuladores leves já pré-configurados para você só abrir e jogar.
+                  </span>
+                </div>
+                <div className="flex items-start gap-3 bg-black/40 p-3 rounded-xl border border-zinc-800">
+                  <span className="text-[#00d2ff] font-bold text-sm">✔</span>
+                  <span className="text-xs sm:text-sm text-zinc-200">
+                    <strong className="text-white">Suporte Individual no WhatsApp:</strong> Tira-dúvidas caso precise de ajuda na configuração.
+                  </span>
                 </div>
               </div>
 
-              {/* Preço Secundário e CTA Principal */}
-              <div className="pt-4 flex flex-col sm:flex-row sm:items-center gap-4">
-                <div>
-                  <span className="text-xs text-zinc-400 uppercase font-mono block">Apoio para Manutenção</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl sm:text-3xl font-black text-white">R$ 29,90</span>
-                    <span className="text-xs text-zinc-400 font-mono">/único ou contribuição</span>
+              {/* Preço Ancorado e CTA Principal */}
+              <div className="pt-4 border-t border-zinc-800/80">
+                <p className="text-xs font-chakra text-zinc-400 uppercase tracking-wider mb-2">
+                  Pagamento Único • Sem Mensalidades
+                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-zinc-500 text-lg line-through font-chakra">R$ 97,00</span>
+                    <span className="text-3xl sm:text-4xl font-black font-chakra text-white">R$ 29,90</span>
                   </div>
-                </div>
 
-                <button
-                  onClick={() => {
-                    setCheckoutStep("form");
-                    setShowCheckoutModal(true);
-                  }}
-                  className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-[#0070d1] via-[#00d2ff] to-[#00e676] text-black font-black text-sm uppercase tracking-wider hover:opacity-95 shadow-[0_0_30px_rgba(0,210,255,0.5)] transition-all flex items-center justify-center gap-2"
-                >
-                  <Sparkles className="w-4 h-4 fill-black" />
-                  <span>Resgatar Minha Cadeira no Clube</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                  <button
+                    onClick={() => {
+                      setCheckoutStep("form");
+                      setShowCheckoutModal(true);
+                    }}
+                    className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-[#0070d1] via-[#00d2ff] to-[#00e676] text-black font-black text-sm uppercase tracking-wider hover:opacity-95 shadow-[0_0_30px_rgba(0,210,255,0.5)] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Sparkles className="w-4 h-4 fill-black" />
+                    <span>Resgatar Minha Cadeira no Clube</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-[11px] text-zinc-400 font-chakra mt-2">
+                  Liberação imediata do Token VIP no seu e-mail e WhatsApp após a confirmação.
+                </p>
               </div>
 
             </div>
 
           </div>
 
+        </div>
+
+        {/* GARANTIA BLINDADA DE 7 DIAS (DO SEU MODELO) */}
+        <div className="bg-[#090c15] border border-emerald-500/40 rounded-2xl p-6 sm:p-8 text-center max-w-xl mx-auto shadow-[0_0_30px_rgba(16,185,129,0.15)] mt-12">
+          <div className="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto text-xl font-bold mb-3">
+            🛡️
+          </div>
+          <h3 className="font-chakra font-bold text-xl text-white">Garantia Blindada de 7 Dias</h3>
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2">
+            Se você acessar a plataforma, baixar os arquivos e achar que não valeu a pena, basta pedir o reembolso em até 7 dias que devolvemos 100% do seu valor. Sem burocracia e sem ressentimentos.
+          </p>
         </div>
 
       </section>
