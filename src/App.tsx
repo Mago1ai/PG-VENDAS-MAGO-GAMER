@@ -1,8 +1,7 @@
-import { useState, useEffect, FormEvent, useMemo, useCallback } from "react";
+import { useState, FormEvent, useMemo, useCallback } from "react";
 import { 
   ShieldCheck, 
   Sparkles,
-  Play,
   Volume2,
   Tv,
   HelpCircle,
@@ -11,8 +10,6 @@ import {
   ArrowRight,
   CheckCircle2,
   RefreshCw,
-  ExternalLink,
-  Heart,
   BookOpen,
   ChevronDown,
   ChevronUp,
@@ -21,9 +18,49 @@ import {
   History,
   Monitor,
   Gamepad2,
-  Smartphone
+  Smartphone,
+  HardDrive,
+  Check,
+  Play
 } from "lucide-react";
 import { getPS2Cover3D } from "./services/coverService";
+
+// --- CHECKOUT OFICIAL CAKTO (OFERTA R$ 29,90) ---
+const CAKTO_CHECKOUT_URL = "https://pay.cakto.com.br/fznu843";
+
+// Redirecionamento com preservação de UTMs e disparo de Pixel
+function redirectToCheckout(source = "landing_page") {
+  if (typeof window !== "undefined") {
+    // Dispara InitiateCheckout no Meta Pixel se configurado
+    const win = window as unknown as { fbq?: (...args: unknown[]) => void };
+    if (win.fbq) {
+      try {
+        win.fbq("track", "InitiateCheckout", {
+          content_name: "Mago Gamer - Acesso VIP R$ 29,90",
+          content_category: "Games & Emuladores PS2",
+          value: 29.90,
+          currency: "BRL"
+        });
+      } catch (err) {
+        console.warn("Pixel tracking:", err);
+      }
+    }
+
+    try {
+      const currentParams = new URLSearchParams(window.location.search);
+      if (!currentParams.has("src")) {
+        currentParams.set("src", source);
+      }
+      const targetUrl = new URL(CAKTO_CHECKOUT_URL);
+      currentParams.forEach((val, key) => {
+        targetUrl.searchParams.set(key, val);
+      });
+      window.location.href = targetUrl.toString();
+    } catch {
+      window.location.href = CAKTO_CHECKOUT_URL;
+    }
+  }
+}
 
 // --- CREDENCIAIS DO SUPABASE (GRAVAÇÃO DE TOKENS EM TEMPO REAL) ---
 const SUPABASE_URL = "https://vonyukxaguxbbituavlt.supabase.co";
@@ -37,14 +74,12 @@ function playPs2BootSound() {
     const ctx = new AudioCtx();
     const now = ctx.currentTime;
 
-    // Ganho Mestre
     const masterGain = ctx.createGain();
     masterGain.gain.setValueAtTime(0.0001, now);
     masterGain.gain.linearRampToValueAtTime(0.45, now + 1.2);
     masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 5.8);
     masterGain.connect(ctx.destination);
 
-    // Frequências da harmonia do boot (acorde de abertura místico em Lá menor / 9ª)
     const harmonicFrequencies = [55, 82.4, 110, 164.8, 220, 277.2, 329.6, 440, 554.3];
 
     harmonicFrequencies.forEach((freq, idx) => {
@@ -74,7 +109,6 @@ function playPs2BootSound() {
       osc.stop(now + 6.0);
     });
 
-    // Soprador de ar atmosférico / Ruído de mar do boot
     const bufferSize = ctx.sampleRate * 4.5;
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
@@ -201,6 +235,70 @@ const PRESERVED_COLLECTION: PreservedGame[] = [
   }
 ];
 
+// --- DISPOSITIVOS EXPLICADOS VISUALMENTE ---
+const COMPATIBLE_DEVICES = [
+  {
+    title: "No Seu PlayStation 2 Físico",
+    subtitle: "FAT ou SLIM • 100% via Pen Drive ou HD",
+    desc: "Não importa se o leitor óptico do seu videogame está queimado ou se o console é bloqueado. O sistema roda tudo digital via OPL direto no Pen Drive ou Memory Card.",
+    badge: "CONSOLE NATIVO",
+    img: "/icons/ps2_real.jpg"
+  },
+  {
+    title: "No Computador ou Notebook",
+    subtitle: "Windows / Mac • Jogue em HD ou 4K",
+    desc: "Emuladores leves já pré-configurados. Você só precisa baixar, dar dois cliques e jogar. Compatível com teclado ou qualquer controle USB/Bluetooth.",
+    badge: "PC & NOTEBOOK",
+    img: "/icons/pc_setup.jpg"
+  },
+  {
+    title: "No Seu Smartphone (Celular)",
+    subtitle: "Android & iOS • Na Palma da Sua Mão",
+    desc: "Leve o PlayStation 2 para qualquer lugar. Roda com extrema fluidez com controles touch na tela ou pareado com controles sem fio Bluetooth.",
+    badge: "MOBILE PORTÁTIL",
+    img: "/icons/celular_setup.jpg"
+  }
+];
+
+// --- SISTEMAS RETRÔ BÔNUS INCLUSOS ---
+const RETRO_SYSTEMS = [
+  {
+    name: "PlayStation 2 (Foco Principal)",
+    qty: "+5.000 Jogos",
+    desc: "Toda a biblioteca completa do console mais vendido da história da humanidade.",
+    icon: "/icons/ps2_real.jpg",
+    highlight: true
+  },
+  {
+    name: "PlayStation 1 (PS1)",
+    qty: "+1.500 Jogos",
+    desc: "Crash Bandicoot, Resident Evil clássico, Silent Hill, Gran Turismo e muito mais.",
+    icon: "/icons/ps1_real.jpg",
+    highlight: false
+  },
+  {
+    name: "Super Nintendo (SNES)",
+    qty: "+2.000 Jogos",
+    desc: "Super Mario World, Donkey Kong Country 1-2-3, Top Gear, todos em PT-BR.",
+    icon: "/icons/snes_real.jpg",
+    highlight: false
+  },
+  {
+    name: "Arcade / MAME / Neo-Geo",
+    qty: "+1.200 Jogos",
+    desc: "The King of Fighters, Street Fighter II, Metal Slug, Cadillacs and Dinosaurs.",
+    icon: "/icons/arcade_real.jpg",
+    highlight: false
+  },
+  {
+    name: "Sega Mega Drive & Master",
+    qty: "+1.000 Jogos",
+    desc: "Sonic the Hedgehog, Streets of Rage, Shinobi, Golden Axe e clássicos da Sega.",
+    icon: "/icons/megadrive_folder.png",
+    highlight: false
+  }
+];
+
 // --- PERGUNTAS FREQUENTES DA COMUNIDADE ---
 const COMMUNITY_FAQS = [
   {
@@ -226,9 +324,8 @@ const COMMUNITY_FAQS = [
 ];
 
 export default function App() {
-  // Estados de Interface e Gatilhos Sensoriais
+  // Estados de Interface
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [scanlinesActive, setScanlinesActive] = useState(false);
   const [activeTab, setActiveTab] = useState<"all" | "action" | "sports" | "fight" | "terror">("all");
   const [selectedGameMemory, setSelectedGameMemory] = useState<PreservedGame | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -297,49 +394,43 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#06070b] text-white selection:bg-[#0070d1] selection:text-white font-inter antialiased overflow-x-hidden pb-16 sm:pb-0">
+    <div className="relative min-h-screen bg-[#06070b] text-white selection:bg-[#0070d1] selection:text-white font-inter antialiased overflow-x-hidden pb-24 sm:pb-0">
       
-      {/* OVERLAY DE SCANLINES CRT RETRÔ (OPCIONAL) */}
-      {scanlinesActive && (
-        <div className="fixed inset-0 crt-overlay z-50 pointer-events-none opacity-50" />
-      )}
-
       {/* AMBIÊNCIA DE LUZ SUTIL PLAYSTATION 2 */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[550px] bg-gradient-to-b from-[#003791]/30 via-[#0070d1]/10 to-transparent blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/3 right-6 w-[400px] h-[400px] bg-[#00d2ff]/10 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[400px] sm:h-[550px] bg-gradient-to-b from-[#003791]/30 via-[#0070d1]/10 to-transparent blur-[100px] sm:blur-[140px] pointer-events-none" />
 
       {/* BARRA DE AVISO SUPERIOR (ESTILO FIRMWARE RETRO) */}
-      <div className="bg-[#002868]/90 border-b border-[#0070d1]/40 text-xs sm:text-sm py-2 px-4 text-center font-chakra text-zinc-200 tracking-wide">
+      <div className="bg-[#002868]/95 border-b border-[#0070d1]/40 text-[10px] xs:text-[11px] sm:text-xs py-2 px-3 sm:px-4 text-center font-chakra text-zinc-200 tracking-wide leading-tight">
         ⚡ SERVIDORES DEDICADOS NA NUVEM • COMPATÍVEL COM OPL (PS2), CELULAR (ANDROID/IOS) E PC
       </div>
 
-      {/* --- HEADER: IDENTIDADE MAGO GAMER & COMPRA RÁPIDA --- */}
+      {/* --- HEADER RESPONSIVO: IDENTIDADE MAGO GAMER & GARANTIA DE ACESSO --- */}
       <header className="border-b border-zinc-800/80 bg-[#06070b]/90 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
           
           {/* Identidade */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0070d1] to-[#003791] flex items-center justify-center font-chakra font-black text-white text-base shadow-[0_0_15px_rgba(0,112,209,0.6)]">
+          <div className="flex items-center gap-2 xs:gap-2.5 sm:gap-3 shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-[#0070d1] to-[#003791] flex items-center justify-center font-chakra font-black text-white text-sm sm:text-base shadow-[0_0_15px_rgba(0,112,209,0.6)] shrink-0">
               PS
             </div>
             <div>
-              <span className="font-chakra font-bold text-lg tracking-wider text-white flex items-center gap-1">
+              <span className="font-chakra font-bold text-sm xs:text-base sm:text-lg tracking-wider text-white flex items-center gap-1">
                 MAGO<span className="text-[#00d2ff]">GAMER</span>
               </span>
-              <span className="text-[9px] font-chakra text-zinc-400 tracking-widest block uppercase">
+              <span className="text-[8px] xs:text-[9px] font-chakra text-zinc-400 tracking-widest block uppercase leading-none mt-0.5">
                 Biblioteca Retro PS2
               </span>
             </div>
           </div>
 
           {/* Símbolos Oficiais e Ações */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 shrink-0">
             
             {/* Botão de Áudio do Boot */}
             <button
               onClick={handlePlayBoot}
               disabled={isPlayingAudio}
-              className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-chakra font-bold transition-all border ${
+              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-chakra font-bold transition-all border ${
                 isPlayingAudio 
                   ? "bg-[#00d2ff] text-black border-[#00d2ff] shadow-[0_0_15px_#00d2ff]" 
                   : "bg-[#0a0e1a] text-zinc-300 border-zinc-700 hover:border-[#0070d1]"
@@ -351,82 +442,58 @@ export default function App() {
             </button>
 
             {/* Símbolos do Controle */}
-            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0a0d16] border border-zinc-800 text-xs font-black">
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0a0d16] border border-zinc-800 text-xs font-black">
               <span className="text-[#00e676]">▲</span>
               <span className="text-[#f50057]">■</span>
               <span className="text-[#ff1744]">●</span>
               <span className="text-[#2979ff]">✖</span>
             </div>
 
-            {/* CTA Principal do Header */}
+            {/* CTA do Header */}
             <button
-              onClick={() => {
-                setCheckoutStep("form");
-                setShowCheckoutModal(true);
-              }}
-              className="bg-[#0070d1] hover:bg-[#005be3] transition text-white px-4 sm:px-6 py-2 rounded-lg font-chakra font-bold text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(0,112,209,0.5)] flex items-center gap-1.5"
+              onClick={() => redirectToCheckout("header")}
+              className="bg-[#0070d1] hover:bg-[#005be3] active:scale-95 transition text-white px-2.5 xs:px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-lg font-chakra font-bold text-[11px] xs:text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(0,112,209,0.5)] flex items-center gap-1 whitespace-nowrap min-h-[36px] sm:min-h-[40px]"
             >
-              <span>COMPRAR ACESSO VIP (R$ 29,90)</span>
+              <span>GARANTIR ACESSO</span>
+              <span className="hidden xs:inline text-zinc-200 font-normal">| R$ 29,90</span>
             </button>
           </div>
         </div>
       </header>
 
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION: MINIMALISTA, NOSTÁLGICA E FOCADA EM CONVERSÃO */}
+      {/* 1. HERO SECTION: NOSTALGIA, CLAREZA E CONVERSÃO IMEDIATA */}
       {/* ========================================================================= */}
-      <section className="relative pt-10 sm:pt-16 pb-16 px-4 max-w-6xl mx-auto text-center" id="hero">
+      <section className="relative pt-6 xs:pt-8 sm:pt-14 pb-10 sm:pb-14 px-3 xs:px-4 sm:px-6 max-w-6xl mx-auto text-center" id="hero">
         
-        {/* Badge Nostálgico */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#0070d1]/15 border border-[#0070d1]/40 text-xs text-[#00d2ff] font-chakra font-semibold tracking-wider uppercase mb-5">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0070d1]/15 border border-[#0070d1]/40 text-[10px] xs:text-[11px] sm:text-xs text-[#00d2ff] font-chakra font-semibold tracking-wider uppercase mb-4 sm:mb-5 max-w-full leading-normal">
           <span>● A TARDE DE SÁBADO EM 2004 AINDA VIVE EM VOCÊ</span>
         </div>
 
-        {/* Headline de Alta Conversão */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-chakra font-bold tracking-tight text-white max-w-4xl mx-auto leading-[1.15] mb-5">
+        {/* Headline Principal */}
+        <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-chakra font-bold tracking-tight text-white max-w-4xl mx-auto leading-[1.15] mb-4 sm:mb-5 px-1 break-words">
           Reviva a Era de Ouro do <span className="text-[#00d2ff] drop-shadow-[0_0_25px_rgba(0,210,255,0.4)]">PlayStation 2</span> Sem Passar Raiva.
         </h1>
 
-        {/* Subtítulo Claro e Direto */}
-        <p className="text-sm sm:text-lg text-zinc-300 max-w-3xl mx-auto leading-relaxed font-normal mb-8">
-          Chega de gravar DVDs que não funcionam ou garimpar links quebrados com vírus. Tenha acesso direto via nuvem a <strong>mais de 1.000 jogos testados</strong>, prontos para rodar no seu <strong>Pen Drive (OPL)</strong>, <strong>Celular</strong> ou <strong>PC</strong>.
+        {/* Subtítulo com a Biblioteca Completa */}
+        <p className="text-xs xs:text-sm sm:text-base md:text-lg text-zinc-300 max-w-3xl mx-auto leading-relaxed font-normal mb-6 sm:mb-8 px-1 xs:px-2">
+          Chega de gravar DVDs que não funcionam ou garimpar links quebrados com vírus. Tenha acesso direto via nuvem a <strong>mais de 5.000 jogos testados</strong> (a biblioteca completa do PS2 + Bônus Retrô), prontos para rodar no seu <strong>Pen Drive (OPL)</strong>, <strong>Celular</strong> ou <strong>PC</strong>.
         </p>
 
-        {/* Badges de Compatibilidade Rápida (Triple Platform Cards) */}
-        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-xl mx-auto my-6 text-center">
-          <div className="bg-[#0c101c] border border-zinc-800 hover:border-[#0070d1]/50 p-3 sm:p-3.5 rounded-xl transition-all">
-            <p className="font-chakra text-[10px] sm:text-xs text-zinc-400 font-bold uppercase tracking-wider">CONSOLE</p>
-            <p className="font-chakra font-bold text-sm sm:text-base text-zinc-100 mt-1">100% OPL</p>
-            <span className="text-[9px] sm:text-[10px] text-[#00e676] font-mono">Fat & Slim</span>
-          </div>
-          <div className="bg-[#0c101c] border border-zinc-800 hover:border-[#0070d1]/50 p-3 sm:p-3.5 rounded-xl transition-all">
-            <p className="font-chakra text-[10px] sm:text-xs text-zinc-400 font-bold uppercase tracking-wider">SMARTPHONE</p>
-            <p className="font-chakra font-bold text-sm sm:text-base text-zinc-100 mt-1">Android & iOS</p>
-            <span className="text-[9px] sm:text-[10px] text-[#00d2ff] font-mono">Controle Bluetooth</span>
-          </div>
-          <div className="bg-[#0c101c] border border-zinc-800 hover:border-[#0070d1]/50 p-3 sm:p-3.5 rounded-xl transition-all">
-            <p className="font-chakra text-[10px] sm:text-xs text-zinc-400 font-bold uppercase tracking-wider">COMPUTADOR</p>
-            <p className="font-chakra font-bold text-sm sm:text-base text-zinc-100 mt-1">PC / Notebook</p>
-            <span className="text-[9px] sm:text-[10px] text-[#00e676] font-mono">Pré-Configurado</span>
-          </div>
-        </div>
-
-        {/* BOTÃO PRINCIPAL DE COMPRA NO INÍCIO (PRIMEIRA DOBRA) */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 my-6">
+        {/* BOTÃO PRINCIPAL DE ACESSO NO INÍCIO */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 my-6 w-full max-w-sm sm:max-w-none mx-auto px-1 xs:px-2">
           <button
-            onClick={() => {
-              setCheckoutStep("form");
-              setShowCheckoutModal(true);
-            }}
-            className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#0070d1] hover:bg-[#005be3] text-white font-chakra font-bold text-base sm:text-lg shadow-[0_0_30px_rgba(0,112,209,0.6)] transition-all flex items-center justify-center gap-2"
+            onClick={() => redirectToCheckout("hero")}
+            className="w-full sm:w-auto min-h-[48px] sm:min-h-[54px] px-5 xs:px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl bg-[#0070d1] hover:bg-[#005be3] active:scale-[0.98] text-white font-chakra font-bold text-xs xs:text-sm sm:text-lg shadow-[0_0_30px_rgba(0,112,209,0.6)] transition-all flex items-center justify-center gap-2"
           >
-            <span>COMPRAR MEU ACESSO VIP (R$ 29,90)</span>
-            <ArrowRight className="w-5 h-5" />
+            <span>GARANTIR MEU ACESSO VIP (R$ 29,90)</span>
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
           </button>
 
           <button
             onClick={handlePlayBoot}
-            className={`w-full sm:w-auto px-5 py-3.5 rounded-xl font-chakra font-bold text-sm transition-all border flex items-center justify-center gap-2 ${
+            className={`w-full sm:w-auto min-h-[44px] sm:min-h-[48px] px-4 xs:px-5 py-3 rounded-xl font-chakra font-bold text-xs sm:text-sm transition-all border flex items-center justify-center gap-2 ${
               isPlayingAudio
                 ? "bg-[#00d2ff] text-black border-[#00d2ff] shadow-[0_0_20px_#00d2ff]"
                 : "bg-[#0c101c] hover:bg-[#131b32] text-zinc-300 border-zinc-700"
@@ -438,24 +505,24 @@ export default function App() {
         </div>
 
         {/* Micro Selos de Confiança */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-zinc-400 font-chakra mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 xs:gap-4 sm:gap-6 text-[11px] sm:text-xs text-zinc-400 font-chakra mb-8 sm:mb-10 px-2">
           <span className="flex items-center gap-1 text-zinc-300">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676]" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676] shrink-0" />
             Acesso Vitalício
           </span>
           <span className="flex items-center gap-1 text-zinc-300">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676]" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676] shrink-0" />
             Download Imediato
           </span>
           <span className="flex items-center gap-1 text-zinc-300">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676]" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#00e676] shrink-0" />
             Suporte no WhatsApp
           </span>
         </div>
 
-        {/* VITRINE MINIMALISTA DE JOGOS NO HERO (SEM QUADRADOS PESADOS) */}
-        <div className="relative max-w-4xl mx-auto pt-4 pb-8">
-          <div className="flex items-center justify-center gap-4 sm:gap-6 overflow-x-auto py-4 no-scrollbar">
+        {/* VITRINE DOS CLÁSSICOS (FLUIDA E ROLÁVEL EM DISPOSITIVOS MÓVEIS) */}
+        <div className="relative max-w-4xl mx-auto pt-2 pb-6 overflow-hidden">
+          <div className="flex items-center justify-start sm:justify-center gap-3 xs:gap-4 sm:gap-6 overflow-x-auto py-3 px-2 no-scrollbar scroll-smooth">
             {[
               { title: "GTA San Andreas", cover: getPS2Cover3D("SLUS-20946") },
               { title: "PES 2008", cover: getPS2Cover3D("SLUS-21685") },
@@ -465,7 +532,7 @@ export default function App() {
             ].map((item, idx) => (
               <div 
                 key={idx}
-                className="w-32 sm:w-40 h-44 sm:h-56 shrink-0 transition-transform duration-300 hover:scale-110 hover:-translate-y-2 cursor-pointer"
+                className="w-24 xs:w-28 sm:w-36 md:w-40 h-36 xs:h-42 sm:h-52 md:h-56 shrink-0 transition-transform duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer active:scale-95"
                 onClick={() => {
                   const el = document.getElementById("catalogo");
                   el?.scrollIntoView({ behavior: "smooth" });
@@ -480,48 +547,164 @@ export default function App() {
               </div>
             ))}
           </div>
-          <p className="text-xs font-chakra text-zinc-400 mt-2">
-            + Mais de 1.000 capas e jogos clássicos catalogados na nuvem.
-          </p>
         </div>
 
-        {/* ESTATÍSTICAS SOCIAIS E PROVA DA COMUNIDADE */}
-        <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/80 pt-8 text-center max-w-3xl mx-auto font-chakra">
+        {/* ESTATÍSTICAS SOCIAIS */}
+        <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:gap-4 border-t border-zinc-800/80 pt-5 sm:pt-6 text-center max-w-3xl mx-auto font-chakra px-1">
           <div>
-            <p className="text-2xl sm:text-3xl font-bold text-white tracking-wider">+1.480</p>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">Jogadores Ativos</p>
+            <p className="text-base xs:text-xl sm:text-3xl font-bold text-white tracking-wider">+1.480</p>
+            <p className="text-[9px] xs:text-[10px] sm:text-xs text-zinc-400 mt-0.5 leading-tight">Jogadores Ativos</p>
           </div>
           <div>
-            <p className="text-2xl sm:text-3xl font-bold text-yellow-400 tracking-wider">★ 4.9/5</p>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">Avaliação dos Membros</p>
+            <p className="text-base xs:text-xl sm:text-3xl font-bold text-yellow-400 tracking-wider">★ 4.9/5</p>
+            <p className="text-[9px] xs:text-[10px] sm:text-xs text-zinc-400 mt-0.5 leading-tight">Avaliação Membros</p>
           </div>
           <div>
-            <p className="text-2xl sm:text-3xl font-bold text-[#00e676] tracking-wider">100%</p>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">Testado e Funcional</p>
+            <p className="text-base xs:text-xl sm:text-3xl font-bold text-[#00e676] tracking-wider">100%</p>
+            <p className="text-[9px] xs:text-[10px] sm:text-xs text-zinc-400 mt-0.5 leading-tight">Testado e Funcional</p>
           </div>
         </div>
 
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. CATÁLOGO DE JOGOS: CAPAS FLUTUANTES LIVRES (SEM QUADRADOS ENVOLTA) */}
+      {/* 2. ONDE FUNCIONA: DEMONSTRAÇÃO VISUAL COM IMAGENS REAIS (PS2, PC, CELULAR) */}
       {/* ========================================================================= */}
-      <section className="relative py-16 sm:py-24 px-4 max-w-6xl mx-auto border-t border-zinc-800/80" id="catalogo">
+      <section className="py-10 xs:py-14 sm:py-20 border-t border-zinc-800/80 max-w-6xl mx-auto px-3 xs:px-4 sm:px-6" id="dispositivos">
         
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-xs font-chakra font-bold text-[#00d2ff] uppercase tracking-widest mb-2">
-            Catálogo Sem Dor de Cabeça
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12 space-y-1.5 sm:space-y-2">
+          <p className="text-[10px] xs:text-xs font-chakra font-bold text-[#00d2ff] uppercase tracking-widest">
+            Compatibilidade Total
           </p>
-          <h2 className="text-3xl sm:text-4xl font-chakra font-bold text-white tracking-tight">
+          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-chakra font-bold text-white tracking-tight">
+            Jogue Onde Você Quiser: Console, Celular ou PC
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400 px-2">
+            Você não precisa comprar nenhum aparelho novo. O acervo roda no que você já tem em casa.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 xs:gap-6 sm:gap-8">
+          {COMPATIBLE_DEVICES.map((dev, idx) => (
+            <div 
+              key={idx}
+              className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1]/60 rounded-2xl p-4 xs:p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,112,209,0.2)]"
+            >
+              <div>
+                {/* Imagem Real do Dispositivo */}
+                <div className="w-full h-40 xs:h-44 sm:h-48 rounded-xl overflow-hidden bg-black/60 border border-zinc-800 mb-4 sm:mb-5 relative flex items-center justify-center group">
+                  <img 
+                    src={dev.img} 
+                    alt={dev.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <span className="absolute top-2.5 left-2.5 xs:top-3 xs:left-3 px-2 xs:px-2.5 py-0.5 xs:py-1 rounded-md bg-black/85 backdrop-blur-md border border-white/10 text-[9px] xs:text-[10px] font-chakra font-bold text-[#00d2ff] tracking-wider uppercase">
+                    {dev.badge}
+                  </span>
+                </div>
+
+                <h3 className="text-base xs:text-lg sm:text-xl font-chakra font-bold text-white mb-1">
+                  {dev.title}
+                </h3>
+                <p className="text-xs font-chakra text-[#00e676] font-semibold mb-2.5">
+                  {dev.subtitle}
+                </p>
+                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                  {dev.desc}
+                </p>
+              </div>
+
+              <div className="mt-4 sm:mt-5 pt-3 border-t border-zinc-800/80">
+                <span className="text-[10px] xs:text-[11px] font-chakra text-zinc-400 flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-[#00e676] shrink-0" />
+                  Tutoriais rápidos inclusos
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 3. A BIBLIOTECA DEFINITIVA (+5.000 JOGOS PS2 + BÔNUS RETRÔ) */}
+      {/* ========================================================================= */}
+      <section className="py-10 xs:py-14 sm:py-20 border-t border-zinc-800/80 max-w-6xl mx-auto px-3 xs:px-4 sm:px-6" id="biblioteca">
+        
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12 space-y-1.5 sm:space-y-2">
+          <span className="bg-[#0070d1]/20 text-[#00d2ff] border border-[#0070d1]/40 text-[10px] xs:text-xs font-chakra font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            Acervo Histórico Definitivo
+          </span>
+          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-chakra font-bold text-white tracking-tight pt-2">
+            Mais de 5.000 Jogos de PS2 + Bônus Retrô
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-400 px-2">
+            O foco absoluto da nossa curadoria é o PlayStation 2, mas você recebe de presente todos os emuladores e sistemas retrô já organizados na nuvem.
+          </p>
+        </div>
+
+        {/* Grid de Plataformas e Quantidades */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 xs:gap-4 sm:gap-5">
+          {RETRO_SYSTEMS.map((sys, idx) => (
+            <div 
+              key={idx}
+              className={`rounded-2xl p-4 xs:p-5 sm:p-6 transition-all ${
+                sys.highlight 
+                  ? "bg-gradient-to-b from-[#0a1228] to-[#060810] border-2 border-[#00d2ff] shadow-[0_0_30px_rgba(0,210,255,0.25)] sm:col-span-2 lg:col-span-1" 
+                  : "bg-[#090c15] border border-zinc-800 hover:border-zinc-700"
+              }`}
+            >
+              <div className="flex items-center gap-3 xs:gap-4 mb-3.5">
+                <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-xl overflow-hidden bg-black/60 border border-zinc-700 shrink-0 p-1 flex items-center justify-center">
+                  <img src={sys.icon} alt={sys.name} className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <h3 className="font-chakra font-bold text-sm xs:text-base sm:text-lg text-white leading-snug">
+                    {sys.name}
+                  </h3>
+                  <span className={`text-xs font-chakra font-bold ${sys.highlight ? "text-[#00e676]" : "text-[#00d2ff]"}`}>
+                    {sys.qty}
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                {sys.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center px-2">
+          <button
+            onClick={() => redirectToCheckout("biblioteca")}
+            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 bg-[#0070d1] hover:bg-[#005be3] active:scale-[0.98] text-white px-6 xs:px-8 py-3.5 sm:py-4 rounded-xl font-chakra font-bold text-xs sm:text-sm transition-all shadow-[0_0_20px_rgba(0,112,209,0.4)]"
+          >
+            <span>ACESSAR TODO O CONTEÚDO (R$ 29,90)</span>
+            <ArrowRight className="w-4 h-4 shrink-0" />
+          </button>
+        </div>
+
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 4. CATÁLOGO DE JOGOS: CAPAS FLUTUANTES LIVRES (SEM QUADRADOS ENVOLTA) */}
+      {/* ========================================================================= */}
+      <section className="relative py-10 xs:py-14 sm:py-20 px-3 xs:px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-800/80" id="catalogo">
+        
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+          <p className="text-[10px] xs:text-xs font-chakra font-bold text-[#00d2ff] uppercase tracking-widest mb-1.5">
+            Obras Em Destaque
+          </p>
+          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-chakra font-bold text-white tracking-tight">
             Os Maiores Clássicos que Marcaram a Sua Vida
           </h2>
-          <p className="text-sm text-zinc-400 mt-3">
-            Capas 3D oficiais, arquivos verificados e sem corrupção. Clique no jogo para ver a memória ou jogar.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-2 px-2">
+            Capas 3D oficiais, arquivos verificados e sem corrupção. Clique para reviver a história de infância de cada obra.
           </p>
         </div>
 
         {/* Filtros de Categoria */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 xs:gap-2 mb-8 sm:mb-10 px-1">
           {[
             { id: "all", label: "Todas as Obras" },
             { id: "action", label: "Ação & Aventura" },
@@ -532,7 +715,7 @@ export default function App() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`px-4 py-2 rounded-xl text-xs font-chakra font-bold transition-all ${
+              className={`px-2.5 xs:px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] xs:text-xs font-chakra font-bold transition-all min-h-[36px] sm:min-h-[38px] flex items-center justify-center ${
                 activeTab === tab.id
                   ? "bg-[#0070d1] text-white shadow-[0_0_15px_rgba(0,112,209,0.5)]"
                   : "bg-[#0c101c] text-zinc-400 hover:text-white border border-zinc-800"
@@ -544,117 +727,91 @@ export default function App() {
         </div>
 
         {/* GRADE DE CAPAS 3D FLUTUANTES (TOTALMENTE LIVRES DE CAIXAS/QUADRADOS) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12 px-2">
           {filteredCollection.map((game) => (
             <div
               key={game.serial}
               className="group flex flex-col items-center text-center transition-all duration-300"
             >
               {/* Capa 3D Oficial Flutuando (Sem caixa quadrada) */}
-              <div className="relative w-48 sm:w-52 h-64 sm:h-72 flex items-center justify-center transition-transform duration-500 group-hover:scale-105 group-hover:-translate-y-2">
+              <div className="relative w-36 xs:w-44 sm:w-52 h-52 xs:h-64 sm:h-72 flex items-center justify-center transition-transform duration-500 group-hover:scale-105 group-hover:-translate-y-2">
                 <img
                   src={game.coverUrl}
                   alt={game.title}
                   className="w-full h-full object-contain drop-shadow-[0_20px_35px_rgba(0,112,209,0.35)]"
                   loading="lazy"
                 />
-                <span className="absolute -top-1 left-2 px-2.5 py-0.5 rounded-full bg-[#060810]/95 backdrop-blur-md border border-white/15 text-[10px] font-chakra font-bold text-[#00e676] uppercase tracking-wider shadow-lg">
+                <span className="absolute -top-1 left-2 px-2.5 py-0.5 rounded-full bg-[#060810]/95 backdrop-blur-md border border-white/15 text-[9px] xs:text-[10px] font-chakra font-bold text-[#00e676] uppercase tracking-wider shadow-lg">
                   {game.tag}
                 </span>
               </div>
 
               {/* Título Oficial que Corresponde Exatamente à Capa */}
-              <h3 className="text-lg sm:text-xl font-chakra font-bold text-white tracking-wide mt-4 group-hover:text-[#00d2ff] transition-colors">
+              <h3 className="text-base xs:text-lg sm:text-xl font-chakra font-bold text-white tracking-wide mt-3 sm:mt-3.5 group-hover:text-[#00d2ff] transition-colors">
                 {game.title}
               </h3>
 
               {/* Citação Nostálgica */}
-              <p className="text-xs italic text-zinc-400 font-serif mt-1.5 max-w-xs line-clamp-2">
+              <p className="text-xs italic text-zinc-400 font-serif mt-1 max-w-xs line-clamp-2 px-1">
                 "{game.memoryQuote}"
               </p>
 
-              {/* Botões de Ação */}
-              <div className="mt-4 flex items-center gap-2">
+              {/* Apenas o Botão 'Ver História' como Solicitado */}
+              <div className="mt-3.5">
                 <button
                   onClick={() => setSelectedGameMemory(game)}
-                  className="py-2 px-3.5 rounded-xl bg-[#0c1220] hover:bg-[#131b32] text-zinc-300 hover:text-white text-xs font-chakra font-semibold transition-all border border-zinc-800 hover:border-[#0070d1] flex items-center gap-1.5"
+                  className="py-2.5 px-5 min-h-[42px] rounded-xl bg-[#0c1220] hover:bg-[#0070d1] text-zinc-300 hover:text-white text-xs font-chakra font-bold transition-all border border-[#0070d1]/30 hover:border-transparent flex items-center gap-1.5 active:scale-95"
                 >
-                  <BookOpen className="w-3.5 h-3.5 text-[#00d2ff]" />
+                  <BookOpen className="w-3.5 h-3.5 text-[#00d2ff] group-hover:text-white shrink-0" />
                   <span>Ver História</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setCheckoutStep("form");
-                    setShowCheckoutModal(true);
-                  }}
-                  className="py-2 px-4 rounded-xl bg-[#0070d1] hover:bg-[#005be3] text-white text-xs font-chakra font-bold transition-all shadow-[0_0_15px_rgba(0,112,209,0.4)]"
-                >
-                  Jogar Agora
                 </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Chamada para Lista Completa de Jogos */}
-        <div className="mt-14 text-center">
-          <p className="text-xs sm:text-sm font-chakra text-zinc-400 mb-4 tracking-wider">
-            + Mais de 1.000 títulos clássicos de PS2 testados e disponíveis para acesso imediato.
-          </p>
-          <button
-            onClick={() => {
-              setCheckoutStep("form");
-              setShowCheckoutModal(true);
-            }}
-            className="inline-flex items-center gap-2 bg-[#0c1220] hover:bg-[#152038] border border-[#0070d1]/50 hover:border-[#00d2ff] text-white px-7 py-3 rounded-xl font-chakra font-bold text-xs sm:text-sm transition-all shadow-[0_0_20px_rgba(0,112,209,0.3)]"
-          >
-            <span>VER LISTA COMPLETA NA NUVEM VIP</span>
-            <ArrowRight className="w-4 h-4 text-[#00d2ff]" />
-          </button>
-        </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. COMO FUNCIONA EM 3 PASSOS SIMPLES */}
+      {/* 5. COMO FUNCIONA EM 3 PASSOS SIMPLES */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 border-t border-zinc-800/80 max-w-5xl mx-auto px-4">
-        <div className="text-center max-w-xl mx-auto mb-14 space-y-2">
-          <p className="text-xs font-chakra font-bold text-[#00d2ff] uppercase tracking-widest">Sem Burocracia</p>
-          <h2 className="text-3xl sm:text-4xl font-chakra font-bold text-white tracking-tight">
+      <section className="py-10 xs:py-14 sm:py-20 border-t border-zinc-800/80 max-w-5xl mx-auto px-3 xs:px-4 sm:px-6">
+        <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12 space-y-1.5 sm:space-y-2">
+          <p className="text-[10px] xs:text-xs font-chakra font-bold text-[#00d2ff] uppercase tracking-widest">Sem Burocracia</p>
+          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-chakra font-bold text-white tracking-tight">
             Como Funciona em 3 Passos Simples
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-400">
+          <p className="text-xs sm:text-sm text-zinc-400 px-2">
             Do primeiro clique até o jogo rodando na sua tela em minutos.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1] p-6 rounded-2xl relative transition-all">
-            <div className="w-10 h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-lg mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 xs:gap-5 sm:gap-6">
+          <div className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1] p-4 xs:p-5 sm:p-6 rounded-2xl relative transition-all">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-base sm:text-lg mb-3 sm:mb-4">
               1
             </div>
-            <h3 className="font-chakra font-bold text-lg text-white mb-2">Acesse a Nuvem VIP</h3>
+            <h3 className="font-chakra font-bold text-base sm:text-lg text-white mb-2">Acesse a Nuvem VIP</h3>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
               Você recebe o link direto imediatamente por e-mail e WhatsApp. Servidores dedicados na nuvem, sem anúncios chatos ou links falsos.
             </p>
           </div>
 
-          <div className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1] p-6 rounded-2xl relative transition-all">
-            <div className="w-10 h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-lg mb-4">
+          <div className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1] p-4 xs:p-5 sm:p-6 rounded-2xl relative transition-all">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-base sm:text-lg mb-3 sm:mb-4">
               2
             </div>
-            <h3 className="font-chakra font-bold text-lg text-white mb-2">Passe com 1 Clique</h3>
+            <h3 className="font-chakra font-bold text-base sm:text-lg text-white mb-2">Passe com 1 Clique</h3>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
               Use os arquivos direto no Pen Drive (OPL) do videogame, ou configure no seu celular ou computador com nossos vídeos guiados de 3 minutos.
             </p>
           </div>
 
-          <div className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1] p-6 rounded-2xl relative transition-all">
-            <div className="w-10 h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-lg mb-4">
+          <div className="bg-[#090c15] border border-zinc-800 hover:border-[#0070d1] p-4 xs:p-5 sm:p-6 rounded-2xl relative transition-all">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#0070d1]/20 border border-[#0070d1] text-[#00d2ff] rounded-xl flex items-center justify-center font-chakra font-bold text-base sm:text-lg mb-3 sm:mb-4">
               3
             </div>
-            <h3 className="font-chakra font-bold text-lg text-white mb-2">Pegue o Controle e Jogue</h3>
+            <h3 className="font-chakra font-bold text-base sm:text-lg text-white mb-2">Pegue o Controle e Jogue</h3>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
               Ligue o aparelho e volte no tempo. Memory card, saves e jogos funcionando exatamente como no console original.
             </p>
@@ -663,60 +820,59 @@ export default function App() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. CONEXÃO COM A ROTINA: "UM PORTAL DE 5 MINUTOS" (TV DE TUBO CRT) */}
+      {/* 6. CONEXÃO COM A ROTINA: "UM PORTAL DE 5 MINUTOS" (TV DE TUBO CRT) */}
       {/* ========================================================================= */}
-      <section className="relative py-16 sm:py-24 px-4 max-w-6xl mx-auto border-t border-zinc-800/80">
+      <section className="relative py-10 xs:py-14 sm:py-20 px-3 xs:px-4 sm:px-6 max-w-6xl mx-auto border-t border-zinc-800/80">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
-          {/* Lado Esquerdo */}
-          <div className="lg:col-span-6 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0070d1]/15 border border-[#00d2ff]/40 text-xs text-[#00d2ff] font-chakra">
-              <Clock className="w-3.5 h-3.5" />
+          <div className="lg:col-span-6 space-y-4 sm:space-y-5 text-left">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0070d1]/15 border border-[#00d2ff]/40 text-[10px] xs:text-xs text-[#00d2ff] font-chakra">
+              <Clock className="w-3.5 h-3.5 shrink-0" />
               <span>O PORTAL PARA O PASSADO CABE NA SUA MÃO</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-chakra font-bold text-white tracking-tight leading-tight">
+            <h2 className="text-xl xs:text-2xl sm:text-4xl md:text-5xl font-chakra font-bold text-white tracking-tight leading-tight">
               Nós crescemos, a rotina pesou. <br />
               <span className="text-[#00d2ff]">Este é o seu portal de 5 minutos.</span>
             </h2>
 
-            <p className="text-base text-zinc-300 leading-relaxed">
+            <p className="text-xs xs:text-sm sm:text-base text-zinc-300 leading-relaxed">
               Trabalho, trânsito, prazos, boletos. O tempo livre encolheu. Ninguém mais tem 3 horas para queimar mídias em velocidade 4x, caçar gravadores antigos ou configurar emuladores cheios de plugins que travam no primeiro vídeo.
             </p>
 
-            <div className="space-y-4 pt-2">
-              <div className="flex items-start gap-3 bg-[#0a0d16] p-4 rounded-xl border border-zinc-800">
-                <div className="w-8 h-8 rounded-lg bg-[#0070d1]/20 flex items-center justify-center shrink-0 text-[#00d2ff]">
-                  <Play className="w-4 h-4 fill-[#00d2ff]" />
+            <div className="space-y-2.5 xs:space-y-3 pt-1">
+              <div className="flex items-start gap-2.5 xs:gap-3 bg-[#0a0d16] p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+                <div className="w-7 h-7 xs:w-8 xs:h-8 rounded-lg bg-[#0070d1]/20 flex items-center justify-center shrink-0 text-[#00d2ff]">
+                  <Play className="w-3.5 h-3.5 xs:w-4 xs:h-4 fill-[#00d2ff]" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white font-chakra">Sem Espera, Direto no Menu</h4>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <h4 className="text-xs xs:text-sm font-bold text-white font-chakra">Sem Espera, Direto no Menu</h4>
+                  <p className="text-[11px] xs:text-xs text-zinc-400 mt-0.5 leading-relaxed">
                     Chegue cansado à noite, ligue e jogue. Em 10 segundos você já está disputando uma partida no PES ou cruzando San Andreas de moto.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 bg-[#0a0d16] p-4 rounded-xl border border-zinc-800">
-                <div className="w-8 h-8 rounded-lg bg-[#00e676]/20 flex items-center justify-center shrink-0 text-[#00e676]">
-                  <Disc className="w-4 h-4" />
+              <div className="flex items-start gap-2.5 xs:gap-3 bg-[#0a0d16] p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+                <div className="w-7 h-7 xs:w-8 xs:h-8 rounded-lg bg-[#00e676]/20 flex items-center justify-center shrink-0 text-[#00e676]">
+                  <Disc className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white font-chakra">Salvação dos Leitores Queimados</h4>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <h4 className="text-xs xs:text-sm font-bold text-white font-chakra">Salvação dos Leitores Queimados</h4>
+                  <p className="text-[11px] xs:text-xs text-zinc-400 mt-0.5 leading-relaxed">
                     Seu PS2 guardado no armário volta à vida. Roda tudo digitalmente via OPL em pendrive ou HD externo, sem forçar nenhum laser.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 bg-[#0a0d16] p-4 rounded-xl border border-zinc-800">
-                <div className="w-8 h-8 rounded-lg bg-[#f50057]/20 flex items-center justify-center shrink-0 text-[#f50057]">
-                  <Monitor className="w-4 h-4" />
+              <div className="flex items-start gap-2.5 xs:gap-3 bg-[#0a0d16] p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+                <div className="w-7 h-7 xs:w-8 xs:h-8 rounded-lg bg-[#f50057]/20 flex items-center justify-center shrink-0 text-[#f50057]">
+                  <Monitor className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white font-chakra">Na TV Antiga ou na Tela Moderna</h4>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <h4 className="text-xs xs:text-sm font-bold text-white font-chakra">Na TV Antiga ou na Tela Moderna</h4>
+                  <p className="text-[11px] xs:text-xs text-zinc-400 mt-0.5 leading-relaxed">
                     Ajustado para cabo componente, HDMI de Smart TVs ou o autêntico charme 480i com scanlines nas velhas TVs de tubo.
                   </p>
                 </div>
@@ -724,11 +880,11 @@ export default function App() {
             </div>
           </div>
 
-          {/* Lado Direito: A TV de Tubo Retrô Interativa */}
-          <div className="lg:col-span-6 flex justify-center">
-            <div className="w-full max-w-md bg-[#12141c] p-6 rounded-3xl border-4 border-[#252836] shadow-[0_0_60px_rgba(0,0,0,0.9)] relative">
+          {/* TV CRT */}
+          <div className="lg:col-span-6 flex justify-center w-full px-1 xs:px-2">
+            <div className="w-full max-w-md bg-[#12141c] p-3.5 xs:p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-[#252836] shadow-[0_0_60px_rgba(0,0,0,0.9)] relative mx-auto">
               
-              <div className="flex items-center justify-between pb-3 text-xs font-mono text-zinc-500">
+              <div className="flex items-center justify-between pb-2.5 xs:pb-3 text-[10px] xs:text-xs font-mono text-zinc-500">
                 <span>SONY TRINITRON • RETRO CRT 21"</span>
                 <span className="text-[#00e676] flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-[#00e676] animate-ping" />
@@ -736,29 +892,29 @@ export default function App() {
                 </span>
               </div>
 
-              <div className={`relative h-64 sm:h-72 rounded-2xl overflow-hidden border-2 border-zinc-700 bg-black crt-screen-frame flex items-center justify-center transition-all ${
+              <div className={`relative h-52 xs:h-60 sm:h-72 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-zinc-700 bg-black crt-screen-frame flex items-center justify-center transition-all ${
                 tvPower ? "opacity-100" : "opacity-15"
               }`}>
                 {tvPower ? (
-                  <div className="w-full h-full p-4 flex flex-col justify-between relative">
-                    <div className="flex items-center justify-between text-xs font-mono text-[#00d2ff] crt-glow">
+                  <div className="w-full h-full p-3 sm:p-4 flex flex-col justify-between relative">
+                    <div className="flex items-center justify-between text-[11px] sm:text-xs font-mono text-[#00d2ff] crt-glow">
                       <span>VIDEO {tvChannel}</span>
                       <span>480i • 60Hz</span>
                     </div>
 
-                    <div className="text-center space-y-2">
-                      <div className="inline-block p-3 rounded-xl bg-black/60 border border-[#0070d1]/40">
-                        <Disc className="w-10 h-10 text-[#00d2ff] mx-auto animate-spin" style={{ animationDuration: '6s' }} />
+                    <div className="text-center space-y-1">
+                      <div className="inline-block p-2 sm:p-2.5 rounded-xl bg-black/60 border border-[#0070d1]/40">
+                        <Disc className="w-7 xs:w-8 sm:w-10 h-7 xs:h-8 sm:h-10 text-[#00d2ff] mx-auto animate-spin" style={{ animationDuration: '6s' }} />
                       </div>
-                      <h4 className="text-white font-mono font-bold text-sm tracking-wider">
+                      <h4 className="text-white font-mono font-bold text-xs sm:text-sm tracking-wider">
                         OPEN PS2 LOADER V22.1
                       </h4>
-                      <p className="text-[11px] text-[#00e676] font-mono">
-                        [READY] 1.042 JOGOS CATALOGADOS
+                      <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-[#00e676] font-mono">
+                        [READY] +5.000 JOGOS CATALOGADOS
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80 pt-2">
+                    <div className="flex items-center justify-between text-[8px] xs:text-[9px] sm:text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80 pt-2">
                       <span>MEM: 8MB MAGICGATE</span>
                       <span>● ENTRAR | ✖ VOLTAR</span>
                     </div>
@@ -772,11 +928,11 @@ export default function App() {
                 )}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="mt-3.5 sm:mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between">
+                <div className="flex items-center gap-2 xs:gap-3">
                   <button
                     onClick={() => setTvPower(!tvPower)}
-                    className={`px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${
+                    className={`min-h-[36px] px-2.5 xs:px-3 py-1.5 rounded-lg font-mono text-[11px] xs:text-xs font-bold transition-all active:scale-95 ${
                       tvPower 
                         ? "bg-[#ff1744] text-white shadow-[0_0_10px_#ff1744]" 
                         : "bg-zinc-800 text-zinc-400"
@@ -788,17 +944,17 @@ export default function App() {
                   <button
                     onClick={() => setTvChannel(c => c === 1 ? 2 : 1)}
                     disabled={!tvPower}
-                    className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono text-xs transition-all"
+                    className="min-h-[36px] px-2.5 xs:px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono text-[11px] xs:text-xs transition-all active:scale-95"
                   >
                     CANAL: AV-{tvChannel}
                   </button>
                 </div>
 
                 <div className="flex gap-1">
-                  <div className="w-2 h-6 bg-zinc-800 rounded-sm" />
-                  <div className="w-2 h-6 bg-zinc-800 rounded-sm" />
-                  <div className="w-2 h-6 bg-zinc-800 rounded-sm" />
-                  <div className="w-2 h-6 bg-zinc-800 rounded-sm" />
+                  <div className="w-1.5 sm:w-2 h-5 sm:h-6 bg-zinc-800 rounded-sm" />
+                  <div className="w-1.5 sm:w-2 h-5 sm:h-6 bg-zinc-800 rounded-sm" />
+                  <div className="w-1.5 sm:w-2 h-5 sm:h-6 bg-zinc-800 rounded-sm" />
+                  <div className="w-1.5 sm:w-2 h-5 sm:h-6 bg-zinc-800 rounded-sm" />
                 </div>
               </div>
 
@@ -809,77 +965,82 @@ export default function App() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. SEÇÃO DE OFERTA PRINCIPAL (CLUBE & VALOR VIP) */}
       {/* ========================================================================= */}
-      <section className="relative py-16 sm:py-24 px-4 max-w-4xl mx-auto border-t border-zinc-800/80" id="oferta">
+      {/* 7. SEÇÃO DE OFERTA PRINCIPAL (VALOR VIP & GARANTIA DE ACESSO) */}
+      {/* ========================================================================= */}
+      <section className="relative py-10 xs:py-14 sm:py-20 px-3 xs:px-4 sm:px-6 max-w-4xl mx-auto border-t border-zinc-800/80" id="oferta">
         
-        <div className="bg-[#0b0e1a] border-2 border-[#0070d1] rounded-2xl p-6 sm:p-10 shadow-[0_0_60px_rgba(0,112,209,0.35)] relative text-left">
+        <div className="bg-[#0b0e1a] border-2 border-[#0070d1] rounded-2xl p-4 xs:p-6 sm:p-10 shadow-[0_0_60px_rgba(0,112,209,0.35)] relative text-left">
           
-          <div className="text-center space-y-2 mb-8">
-            <span className="bg-[#0070d1] text-white text-xs font-chakra font-bold px-3 py-1 rounded tracking-wider uppercase">
+          <div className="text-center space-y-1.5 sm:space-y-2 mb-6 sm:mb-8">
+            <span className="bg-[#0070d1] text-white text-[10px] xs:text-xs font-chakra font-bold px-3 py-1 rounded tracking-wider uppercase">
               Acesso Completo e Ilimitado
             </span>
-            <h2 className="text-2xl sm:text-4xl font-chakra font-bold text-white pt-2">
+            <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-chakra font-bold text-white pt-2">
               O Que Você Vai Receber Agora:
             </h2>
           </div>
 
-          <div className="space-y-3.5 mb-8">
-            <div className="flex items-start gap-3 bg-black/40 p-3.5 rounded-xl border border-zinc-800">
-              <span className="text-[#00d2ff] font-bold text-base">✔</span>
-              <span className="text-xs sm:text-sm text-zinc-200">
-                <strong className="text-white font-chakra">Catálogo VIP:</strong> Mais de 1.000 jogos de PS2 selecionados e organizados por ordem alfabética.
+          <div className="space-y-2.5 xs:space-y-3 mb-6 sm:mb-8">
+            <div className="flex items-start gap-2.5 xs:gap-3 bg-black/40 p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+              <span className="text-[#00d2ff] font-bold text-base shrink-0 leading-none mt-0.5">✔</span>
+              <span className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                <strong className="text-white font-chakra">Biblioteca Completa do PS2:</strong> Mais de 5.000 jogos selecionados e organizados por ordem alfabética.
               </span>
             </div>
 
-            <div className="flex items-start gap-3 bg-black/40 p-3.5 rounded-xl border border-zinc-800">
-              <span className="text-[#00d2ff] font-bold text-base">✔</span>
-              <span className="text-xs sm:text-sm text-zinc-200">
+            <div className="flex items-start gap-2.5 xs:gap-3 bg-black/40 p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+              <span className="text-[#00d2ff] font-bold text-base shrink-0 leading-none mt-0.5">✔</span>
+              <span className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                <strong className="text-white font-chakra">Bônus Retrô Incluso:</strong> Coleções completas de PS1 (+1.500 jogos), Super Nintendo (+2.000 jogos), Arcade/MAME e Sega.
+              </span>
+            </div>
+
+            <div className="flex items-start gap-2.5 xs:gap-3 bg-black/40 p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+              <span className="text-[#00d2ff] font-bold text-base shrink-0 leading-none mt-0.5">✔</span>
+              <span className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
                 <strong className="text-white font-chakra">Futebol Atualizado (PES/Bomba Patch):</strong> Com transferências recentes e narração clássica brasileira.
               </span>
             </div>
 
-            <div className="flex items-start gap-3 bg-black/40 p-3.5 rounded-xl border border-zinc-800">
-              <span className="text-[#00d2ff] font-bold text-base">✔</span>
-              <span className="text-xs sm:text-sm text-zinc-200">
-                <strong className="text-white font-chakra">Guia Completo OPL:</strong> Vídeo de 3 minutos ensinando como colocar no Pen Drive sem erro.
+            <div className="flex items-start gap-2.5 xs:gap-3 bg-black/40 p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+              <span className="text-[#00d2ff] font-bold text-base shrink-0 leading-none mt-0.5">✔</span>
+              <span className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                <strong className="text-white font-chakra">Guia Rápido OPL (Vídeo 3 min):</strong> Passo a passo ensinando a colocar no Pen Drive sem complicação.
               </span>
             </div>
 
-            <div className="flex items-start gap-3 bg-black/40 p-3.5 rounded-xl border border-zinc-800">
-              <span className="text-[#00d2ff] font-bold text-base">✔</span>
-              <span className="text-xs sm:text-sm text-zinc-200">
-                <strong className="text-white font-chakra">Instalação Celular e PC:</strong> Emuladores leves já pré-configurados para você só abrir e jogar.
+            <div className="flex items-start gap-2.5 xs:gap-3 bg-black/40 p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+              <span className="text-[#00d2ff] font-bold text-base shrink-0 leading-none mt-0.5">✔</span>
+              <span className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                <strong className="text-white font-chakra">Instalação Celular e PC:</strong> Emuladores leves já configurados para você só abrir e jogar.
               </span>
             </div>
 
-            <div className="flex items-start gap-3 bg-black/40 p-3.5 rounded-xl border border-zinc-800">
-              <span className="text-[#00d2ff] font-bold text-base">✔</span>
-              <span className="text-xs sm:text-sm text-zinc-200">
-                <strong className="text-white font-chakra">Suporte Individual no WhatsApp:</strong> Tira-dúvidas caso precise de ajuda na configuração.
+            <div className="flex items-start gap-2.5 xs:gap-3 bg-black/40 p-3 xs:p-3.5 rounded-xl border border-zinc-800">
+              <span className="text-[#00d2ff] font-bold text-base shrink-0 leading-none mt-0.5">✔</span>
+              <span className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                <strong className="text-white font-chakra">Suporte Individual no WhatsApp:</strong> Tira-dúvidas humano caso precise de qualquer apoio.
               </span>
             </div>
           </div>
 
-          <div className="border-t border-zinc-800 pt-6 text-center">
-            <p className="text-xs font-chakra text-zinc-400 uppercase tracking-wider mb-2">
+          <div className="border-t border-zinc-800 pt-5 sm:pt-6 text-center">
+            <p className="text-[11px] xs:text-xs font-chakra text-zinc-400 uppercase tracking-wider mb-2">
               Pagamento Único • Sem Mensalidades
             </p>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <span className="text-zinc-500 text-lg line-through font-chakra">R$ 97,00</span>
-              <span className="text-3xl sm:text-4xl font-chakra font-black text-white">R$ 29,90</span>
+            <div className="flex items-center justify-center gap-3 mb-5 sm:mb-6">
+              <span className="text-zinc-500 text-base xs:text-lg line-through font-chakra">R$ 97,00</span>
+              <span className="text-2xl xs:text-3xl sm:text-4xl font-chakra font-black text-white">R$ 29,90</span>
             </div>
 
             <button
-              onClick={() => {
-                setCheckoutStep("form");
-                setShowCheckoutModal(true);
-              }}
-              className="w-full py-4 rounded-xl bg-[#0070d1] hover:bg-[#005be3] text-white font-chakra font-bold text-base sm:text-lg transition-all shadow-[0_0_30px_rgba(0,112,209,0.5)] flex items-center justify-center gap-2"
+              onClick={() => redirectToCheckout("oferta")}
+              className="w-full min-h-[50px] sm:min-h-[56px] py-3.5 sm:py-4 rounded-xl bg-[#0070d1] hover:bg-[#005be3] active:scale-[0.98] text-white font-chakra font-bold text-sm sm:text-lg transition-all shadow-[0_0_30px_rgba(0,112,209,0.5)] flex items-center justify-center gap-2"
             >
-              <span>COMPRAR MEU ACESSO AGORA →</span>
+              <span>GARANTIR MEU ACESSO AGORA →</span>
             </button>
-            <p className="text-xs text-zinc-400 font-chakra mt-3">
+            <p className="text-[11px] xs:text-xs text-zinc-400 font-chakra mt-3 px-2">
               Liberação imediata do seu Token VIP no e-mail e WhatsApp após a confirmação.
             </p>
           </div>
@@ -887,12 +1048,12 @@ export default function App() {
         </div>
 
         {/* GARANTIA BLINDADA DE 7 DIAS */}
-        <div className="bg-[#090c15] border border-emerald-500/40 rounded-2xl p-6 sm:p-8 text-center max-w-xl mx-auto shadow-[0_0_30px_rgba(16,185,129,0.15)] mt-12">
-          <div className="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto text-xl font-bold mb-3">
+        <div className="bg-[#090c15] border border-emerald-500/40 rounded-2xl p-4 xs:p-6 sm:p-8 text-center max-w-xl mx-auto shadow-[0_0_30px_rgba(16,185,129,0.15)] mt-8 sm:mt-10">
+          <div className="w-11 h-11 xs:w-12 xs:h-12 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto text-lg xs:text-xl font-bold mb-3">
             🛡️
           </div>
-          <h3 className="font-chakra font-bold text-xl text-white">Garantia Blindada de 7 Dias</h3>
-          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2">
+          <h3 className="font-chakra font-bold text-base xs:text-lg sm:text-xl text-white">Garantia Blindada de 7 Dias</h3>
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2 px-1">
             Se você acessar a plataforma, baixar os arquivos e achar que não valeu a pena, basta pedir o reembolso em até 7 dias que devolvemos 100% do seu valor. Sem burocracia e sem ressentimentos.
           </p>
         </div>
@@ -900,20 +1061,20 @@ export default function App() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 6. FAQS: "DÚVIDAS DA NOSSA COMUNIDADE" */}
+      {/* 8. FAQS: "DÚVIDAS FREQUENTES" */}
       {/* ========================================================================= */}
-      <section className="relative py-16 sm:py-24 px-4 max-w-4xl mx-auto border-t border-zinc-800/80">
+      <section className="relative py-10 xs:py-14 sm:py-20 px-3 xs:px-4 sm:px-6 max-w-4xl mx-auto border-t border-zinc-800/80">
         
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-4xl font-chakra font-bold text-white tracking-tight">
+        <div className="text-center mb-8 sm:mb-10">
+          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-chakra font-bold text-white tracking-tight">
             Perguntas Frequentes
           </h2>
-          <p className="text-sm text-zinc-400 mt-2 font-chakra">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1.5 sm:mt-2 font-chakra px-2">
             Tudo o que você precisa saber antes de garantir seu acesso.
           </p>
         </div>
 
-        <div className="space-y-3 mb-12 text-left">
+        <div className="space-y-2.5 xs:space-y-3 mb-8 sm:mb-10 text-left">
           {COMMUNITY_FAQS.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
@@ -923,9 +1084,9 @@ export default function App() {
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-zinc-800/30 transition-colors"
+                  className="w-full p-3.5 xs:p-4 sm:p-5 text-left flex items-center justify-between gap-3 hover:bg-zinc-800/30 transition-colors min-h-[48px]"
                 >
-                  <span className="font-chakra font-bold text-sm sm:text-base text-zinc-100">
+                  <span className="font-chakra font-bold text-xs xs:text-sm sm:text-base text-zinc-100 leading-snug">
                     {faq.q}
                   </span>
                   {isOpen ? (
@@ -935,7 +1096,7 @@ export default function App() {
                   )}
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-zinc-300 leading-relaxed border-t border-zinc-800/80 pt-3">
+                  <div className="px-3.5 xs:px-5 pb-4 sm:pb-5 text-xs sm:text-sm text-zinc-300 leading-relaxed border-t border-zinc-800/80 pt-3">
                     {faq.a}
                   </div>
                 )}
@@ -947,8 +1108,8 @@ export default function App() {
       </section>
 
       {/* --- FOOTER --- */}
-      <footer className="border-t border-zinc-800/80 bg-[#020305] py-10 px-4 text-center text-xs font-chakra text-zinc-500">
-        <div className="max-w-6xl mx-auto space-y-3">
+      <footer className="border-t border-zinc-800/80 bg-[#020305] py-8 px-4 text-center text-xs font-chakra text-zinc-500">
+        <div className="max-w-6xl mx-auto space-y-2.5">
           <div className="flex items-center justify-center gap-2">
             <span className="text-[#00e676]">▲</span>
             <span className="text-[#f50057]">■</span>
@@ -958,7 +1119,7 @@ export default function App() {
           <p className="text-zinc-400">
             MAGO GAMER © 2026 — TODOS OS DIREITOS RESERVADOS.
           </p>
-          <p className="text-[11px] text-zinc-600">
+          <p className="text-[10px] xs:text-[11px] text-zinc-600 max-w-2xl mx-auto leading-relaxed">
             PlayStation 2, DualShock, MagicGate e OPL são marcas de seus respectivos donos. Desenvolvido para preservar a era de ouro dos videogames.
           </p>
         </div>
@@ -969,11 +1130,11 @@ export default function App() {
       {/* ========================================================================= */}
       {selectedGameMemory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-[#0d111c] border-2 border-[#0070d1]/60 rounded-2xl max-w-lg w-full p-6 relative shadow-[0_0_50px_rgba(0,112,209,0.4)] text-left">
+          <div className="bg-[#0d111c] border-2 border-[#0070d1]/60 rounded-2xl max-w-lg w-full p-5 sm:p-6 relative shadow-[0_0_50px_rgba(0,112,209,0.4)] text-left max-h-[90vh] overflow-y-auto">
             
             <button
               onClick={() => setSelectedGameMemory(null)}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-800/50"
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1.5 rounded-lg bg-zinc-800/50"
             >
               ✕
             </button>
@@ -1015,12 +1176,11 @@ export default function App() {
               <button
                 onClick={() => {
                   setSelectedGameMemory(null);
-                  setCheckoutStep("form");
-                  setShowCheckoutModal(true);
+                  redirectToCheckout("modal_historia");
                 }}
                 className="py-2.5 px-5 rounded-xl bg-[#0070d1] hover:bg-[#005be3] text-white font-chakra font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,112,209,0.4)]"
               >
-                Comprar Acesso VIP
+                Garantir Meu Acesso
               </button>
             </div>
 
@@ -1033,11 +1193,11 @@ export default function App() {
       {/* ========================================================================= */}
       {showCheckoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-[#0b0e18] border-2 border-[#0070d1] rounded-2xl max-w-md w-full p-6 relative shadow-[0_0_60px_rgba(0,112,209,0.4)] text-left">
+          <div className="bg-[#0b0e18] border-2 border-[#0070d1] rounded-2xl max-w-md w-full p-5 sm:p-6 relative shadow-[0_0_60px_rgba(0,112,209,0.4)] text-left max-h-[90vh] overflow-y-auto">
             
             <button
               onClick={() => setShowCheckoutModal(false)}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-800/50"
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1.5 rounded-lg bg-zinc-800/50"
             >
               ✕
             </button>
@@ -1050,7 +1210,7 @@ export default function App() {
                   </div>
                   <div>
                     <h3 className="text-lg font-chakra font-bold text-white">Garantir Meu Acesso VIP</h3>
-                    <span className="text-[10px] font-chakra text-zinc-400">+1.000 Jogos Prontos • R$ 29,90</span>
+                    <span className="text-[10px] font-chakra text-zinc-400">+5.000 Jogos Prontos • R$ 29,90</span>
                   </div>
                 </div>
 
@@ -1137,7 +1297,7 @@ export default function App() {
 
                 <div className="pt-2 flex flex-col gap-2">
                   <a
-                    href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20acabei%20de%20comprar%20o%20acesso%20VIP%20do%20Mago%20Gamer!"
+                    href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20acabei%20de%20garantir%20o%20acesso%20VIP%20do%20Mago%20Gamer!"
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-3 rounded-xl bg-[#25D366] text-black font-chakra font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
@@ -1160,7 +1320,7 @@ export default function App() {
         </div>
       )}
 
-      {/* BARRA FIXA DE COMPRA MOBILE (CONVERSÃO MÁXIMA PARA ANÚNCIOS) */}
+      {/* BARRA FIXA MOBILE (CONVERSÃO MÁXIMA PARA ANÚNCIOS) */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#06070b]/95 backdrop-blur-md border-t border-[#0070d1]/40 px-4 py-3 flex items-center justify-between shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
         <div>
           <span className="text-[10px] font-chakra text-zinc-400 block uppercase">Acesso Vitalício</span>
@@ -1170,13 +1330,10 @@ export default function App() {
           </div>
         </div>
         <button
-          onClick={() => {
-            setCheckoutStep("form");
-            setShowCheckoutModal(true);
-          }}
+          onClick={() => redirectToCheckout("mobile_sticky")}
           className="bg-[#0070d1] hover:bg-[#005be3] text-white px-5 py-2.5 rounded-lg font-chakra font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,112,209,0.5)] flex items-center gap-1.5"
         >
-          <span>COMPRAR AGORA</span>
+          <span>GARANTIR ACESSO</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
