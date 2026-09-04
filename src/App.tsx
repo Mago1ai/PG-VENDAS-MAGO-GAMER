@@ -1160,6 +1160,27 @@ export default function App() {
         </div>
       )}
 
+      {/* BARRA FIXA DE COMPRA MOBILE (CONVERSÃO MÁXIMA PARA ANÚNCIOS) */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#06070b]/95 backdrop-blur-md border-t border-[#0070d1]/40 px-4 py-3 flex items-center justify-between shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
+        <div>
+          <span className="text-[10px] font-chakra text-zinc-400 block uppercase">Acesso Vitalício</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-zinc-500 text-xs line-through font-chakra">R$ 97</span>
+            <span className="text-base font-chakra font-black text-white">R$ 29,90</span>
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            setCheckoutStep("form");
+            setShowCheckoutModal(true);
+          }}
+          className="bg-[#0070d1] hover:bg-[#005be3] text-white px-5 py-2.5 rounded-lg font-chakra font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,112,209,0.5)] flex items-center gap-1.5"
+        >
+          <span>COMPRAR AGORA</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
     </div>
   );
 }
