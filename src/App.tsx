@@ -12,6 +12,21 @@ import {
   Usb
 } from "lucide-react";
 
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
+// Meta Pixel tracking helper
+const trackInitiateCheckout = () => {
+  if (typeof window !== "undefined" && typeof window.fbq === "function") {
+    window.fbq("track", "InitiateCheckout");
+  }
+};
+
+const CAKTO_CHECKOUT_URL = "https://pay.cakto.com.br/en8u7oi_293089";
+
 // The 5 Retro Platforms (+7.000 games)
 const RETRO_PLATFORMS = [
   {
@@ -209,14 +224,15 @@ export default function App() {
 
           {/* Botão Principal Verde Neon EXCLUSIVO */}
           <div className="flex flex-col items-center">
-            <button
-              onClick={scrollToOffer}
-              className="neon-pulse-btn w-full sm:w-auto px-10 py-4 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base md:text-lg rounded-xl transition-all duration-200 hover:scale-102 active:scale-98 flex items-center justify-center gap-2.5 cursor-pointer uppercase font-display"
+            <a
+              href={CAKTO_CHECKOUT_URL}
+              onClick={() => trackInitiateCheckout()}
+              className="neon-pulse-btn w-full sm:w-auto px-10 py-4 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base md:text-lg rounded-xl transition-all duration-200 hover:scale-102 active:scale-98 flex items-center justify-center gap-2.5 cursor-pointer uppercase font-display text-center"
               id="hero_cta_btn"
             >
-              <span>QUERO MEU ACESSO</span>
+              <span>QUERO MEU ACESSO (R$ 25,00)</span>
               <ArrowRight className="w-5 h-5" />
-            </button>
+            </a>
 
             <span className="text-xs text-zinc-500 mt-4 font-normal">
               ⚡ Acesso liberado imediatamente • Garantia Incondicional de 7 Dias
@@ -430,7 +446,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Bloco de Preço: De R$ 97,00 por apenas R$ 19,90 */}
+            {/* Bloco de Preço: De R$ 97,00 por apenas R$ 25,00 */}
             <div className="text-center pt-6 border-t border-white/5 max-w-md mx-auto">
               <span className="text-xs text-zinc-400 line-through block">
                 De R$ 97,00
@@ -440,7 +456,7 @@ export default function App() {
                 <span className="text-sm font-semibold text-zinc-400">por apenas</span>
                 <span className="text-xs text-zinc-400 font-bold">R$</span>
                 <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-                  19,90
+                  25,00
                 </span>
               </div>
 
@@ -448,14 +464,16 @@ export default function App() {
                 Pagamento único • Acesso imediato
               </span>
 
-              {/* Botão de Compra Verde Neon com Sombra Suave */}
-              <button
-                onClick={handleOpenCheckout}
-                className="neon-pulse-btn w-full py-4 px-6 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base rounded-xl transition-all duration-200 hover:scale-102 active:scale-98 cursor-pointer uppercase font-display tracking-wide"
+              {/* Botão de Compra Verde Neon com Sombra Suave e Redirecionamento Direto */}
+              <a
+                href={CAKTO_CHECKOUT_URL}
+                onClick={() => trackInitiateCheckout()}
+                className="neon-pulse-btn w-full py-4 px-6 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base rounded-xl transition-all duration-200 hover:scale-102 active:scale-98 cursor-pointer uppercase font-display tracking-wide flex items-center justify-center gap-2 text-center"
                 id="oferta_cta_btn"
               >
-                QUERO MEU ACESSO (R$ 19,90)
-              </button>
+                <span>QUERO MEU ACESSO (R$ 25,00)</span>
+                <ArrowRight className="w-5 h-5" />
+              </a>
 
               <p className="text-[11px] text-zinc-400 mt-4">
                 🔒 Pagamento 100% seguro com liberação imediata por e-mail.
@@ -537,7 +555,7 @@ export default function App() {
                     <span className="font-medium text-zinc-300 block">Kit Mago Gamer VIP</span>
                     <span className="text-[10px] text-zinc-500">+7.000 Jogos • 100% Plug & Play</span>
                   </div>
-                  <span className="font-extrabold text-white text-sm">R$ 19,90</span>
+                  <span className="font-extrabold text-white text-sm">R$ 25,00</span>
                 </div>
 
                 <div className="space-y-1.5">
@@ -603,9 +621,10 @@ export default function App() {
 
                 <button
                   type="submit"
+                  onClick={() => trackInitiateCheckout()}
                   className="w-full py-3.5 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-xs rounded-xl tracking-wider uppercase transition-all cursor-pointer shadow-md mt-2"
                 >
-                  Confirmar e Gerar Acesso (R$ 19,90)
+                  Confirmar e Gerar Acesso (R$ 25,00)
                 </button>
               </form>
             )}
