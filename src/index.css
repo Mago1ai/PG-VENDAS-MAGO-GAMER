@@ -47,37 +47,18 @@
   animation: shimmer 4s infinite ease-in-out;
 }
 
-/* Neon Green Pulse Glow for Primary CTA */
+/* Neon Green Glow exclusively for Primary CTA */
 @keyframes neon-pulse {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4), 0 0 3px rgba(16, 185, 129, 0.2);
-    border-color: rgba(16, 185, 129, 0.8);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
   }
   50% {
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.8), 0 0 10px rgba(16, 185, 129, 0.4);
-    border-color: rgba(52, 211, 153, 1);
+    box-shadow: 0 4px 30px rgba(16, 185, 129, 0.45);
   }
 }
 
 .neon-pulse-btn {
-  animation: neon-pulse 2s infinite ease-in-out;
-}
-
-/* Luxury Card Highlight */
-.glow-card-emerald {
-  position: relative;
-}
-.glow-card-emerald::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(to bottom right, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.05));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  animation: neon-pulse 3s infinite ease-in-out;
 }
 
 .glow-card-purple {
