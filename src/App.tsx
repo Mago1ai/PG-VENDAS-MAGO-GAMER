@@ -10,7 +10,12 @@ import {
   Sparkles,
   Tv,
   Usb,
-  MessageCircle
+  MessageCircle,
+  Download,
+  Headphones,
+  Zap,
+  Smartphone,
+  Laptop
 } from "lucide-react";
 
 declare global {
@@ -36,25 +41,25 @@ const RETRO_PLATFORMS = [
     id: "ps2",
     emoji: "🎮",
     tag: "PlayStation 2",
-    title: "A biblioteca lendária"
+    title: "A biblioteca lendária com clássicos testados"
   },
   {
     id: "ps1",
     emoji: "💿",
     tag: "PlayStation 1",
-    title: "Todos os clássicos do PS1"
+    title: "Todos os clássicos inesquecíveis do PS1"
   },
   {
     id: "snes",
     emoji: "🍄",
-    tag: "Super Nintendo (SNES)",
-    title: "Super Mario, Donkey Kong, Top Gear"
+    tag: "Super Nintendo",
+    title: "Super Mario, Donkey Kong, Top Gear e mais"
   },
   {
     id: "megadrive",
     emoji: "🦔",
-    tag: "Mega Drive (SEGA)",
-    title: "Sonic e a era de ouro da Sega"
+    tag: "Mega Drive",
+    title: "Sonic e a inesquecível era de ouro da SEGA"
   },
   {
     id: "arcade",
@@ -78,7 +83,7 @@ const NETFLIX_GAMES = [
   },
   {
     id: "bomba",
-    title: "Bomba Patch",
+    title: "Bomba Patch 100% Atualizado",
     cover: "/images/pes_box_3d.png"
   },
   {
@@ -88,12 +93,12 @@ const NETFLIX_GAMES = [
   },
   {
     id: "need",
-    title: "Need for Speed",
+    title: "Need for Speed Most Wanted",
     cover: "/images/need_box_3d.png"
   },
   {
     id: "defjam",
-    title: "Def Jam",
+    title: "Def Jam Fight for NY",
     cover: "/images/defjam_box_3d.png"
   }
 ];
@@ -142,18 +147,6 @@ export default function App() {
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  const scrollToOffer = () => {
-    const target = document.getElementById("oferta");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const handleOpenCheckout = () => {
-    setShowCheckoutModal(true);
-    setCheckoutStep("form");
-  };
-
   const handleProcessCheckout = (e: FormEvent) => {
     e.preventDefault();
     if (!userName || !userEmail) {
@@ -169,31 +162,32 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-zinc-100 font-sans antialiased selection:bg-emerald-500 selection:text-zinc-950">
+    <div className="min-h-screen bg-[#07090e] text-zinc-100 font-sans antialiased selection:bg-emerald-500 selection:text-zinc-950 overflow-x-hidden pt-safe pb-safe">
       
-      {/* --- HEADER SÓBRIO E DISCRETO --- */}
-      <header className="w-full border-b border-white/5 py-5 px-6 sm:px-10">
+      {/* --- HEADER SÓBRIO E COMPACTO MOBILE --- */}
+      <header className="w-full border-b border-white/5 py-3.5 sm:py-4 px-4 sm:px-8 bg-[#07090e]/95 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-              <Gamepad2 className="w-4 h-4 text-zinc-300" />
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+              <Gamepad2 className="w-4 h-4 text-emerald-400" />
             </div>
-            <span className="font-display font-bold text-lg tracking-tight text-white">
+            <span className="font-display font-bold text-base sm:text-lg tracking-tight text-white">
               MAGO GAMER
             </span>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <span className="hidden md:inline-block text-[11px] font-medium text-zinc-400 tracking-wider uppercase px-3 py-1 rounded-full bg-white/5 border border-white/5">
-              100% Plug & Play • Jogue pelo Pendrive
+              100% Plug & Play • PS2, PC, Celular & TV Box
             </span>
             <a
               href={WHATSAPP_GENERAL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 hover:border-emerald-500/35 transition-all"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 transition-all"
+              id="header_whatsapp_link"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
               <span>Suporte / WhatsApp</span>
             </a>
           </div>
@@ -201,122 +195,127 @@ export default function App() {
       </header>
 
       <main>
-        {/* --- SEÇÃO 1: HERO SECTION LEVE & ELEGANTE --- */}
-        <section className="relative pt-20 pb-28 md:pt-28 md:pb-36 px-4 max-w-4xl mx-auto text-center" id="hero">
+        {/* --- SEÇÃO 1: HERO SECTION MOBILE-FIRST --- */}
+        <section className="relative pt-8 pb-12 sm:pt-14 sm:pb-16 md:pt-20 md:pb-24 px-4 max-w-4xl mx-auto text-center" id="hero">
           
-          {/* Tag sutil sem verde */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-zinc-300 font-medium mb-8">
-            <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
-            <span>PlayStation 2 • 100% Plug & Play • +7.000 Jogos Prontos</span>
+          {/* Tag de Destaque */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] sm:text-xs text-emerald-300 font-medium mb-5 sm:mb-6">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
+            <span>+7.000 Jogos Prontos • 100% Plug & Play</span>
           </div>
 
-          {/* Headline nostálgica marcante */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.12] max-w-3xl mx-auto">
-            Lembra daquela sensação mágica de ligar o PS2 na sexta-feira à noite?
+          {/* Headline Direta & Atraente */}
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight sm:leading-[1.15] max-w-3xl mx-auto">
+            Reviva os Clássicos de PS2, PS1 e SNES Prontos no seu Console, PC ou Celular
           </h1>
 
-          {/* Subheadline sem termos técnicos */}
-          <p className="text-base sm:text-lg md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed mt-7">
-            Sem complicação técnica. Sem precisar entender de computador. É só plugar no console e jogar os seus clássicos favoritos direto pelo pendrive.
+          {/* Subheadline Clara sem Termos Complexos */}
+          <p className="text-sm sm:text-base md:text-lg text-zinc-300 font-light max-w-2xl mx-auto leading-relaxed mt-4 sm:mt-5">
+            Sem complicação ou configurações chatas. É só conectar no PlayStation 2 (Fat ou Slim), PC, Celular ou TV Box e curtir mais de 7.000 jogos lendários com capinhas em alta resolução.
           </p>
 
-          {/* Benefícios rápidos com foco 100% Plug & Play */}
-          <div className="flex flex-wrap items-center justify-center gap-y-3 gap-x-6 text-xs sm:text-sm text-zinc-400 mt-8 mb-10">
-            <div className="flex items-center gap-2">
-              <Usb className="w-4 h-4 text-zinc-400" />
-              <span>100% Plug & Play</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Tv className="w-4 h-4 text-zinc-400" />
-              <span>Qualquer PS2 (Fat ou Slim)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Gamepad2 className="w-4 h-4 text-zinc-400" />
-              <span>+7.000 Clássicos Prontos</span>
-            </div>
+          {/* Dispositivos Suportados - Ícones Compactos */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] sm:text-xs text-zinc-300 mt-5 mb-7">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
+              <Tv className="w-3.5 h-3.5 text-emerald-400" /> PS2 (Fat/Slim)
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
+              <Laptop className="w-3.5 h-3.5 text-emerald-400" /> PC / Notebook
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
+              <Smartphone className="w-3.5 h-3.5 text-emerald-400" /> Celular Android
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
+              <Usb className="w-3.5 h-3.5 text-emerald-400" /> TV Box / Pendrive
+            </span>
           </div>
 
-          {/* Botão Principal Verde Neon EXCLUSIVO */}
-          <div className="flex flex-col items-center">
+          {/* Botão de Ação Imediata Acima da Dobra */}
+          <div className="flex flex-col items-center w-full max-w-md mx-auto">
             <a
               href={CAKTO_CHECKOUT_URL}
               onClick={() => trackInitiateCheckout()}
-              className="neon-pulse-btn w-full sm:w-auto px-10 py-4 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base md:text-lg rounded-xl transition-all duration-200 hover:scale-102 active:scale-98 flex items-center justify-center gap-2.5 cursor-pointer uppercase font-display text-center"
+              className="neon-pulse-btn w-full py-4 px-6 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base sm:text-lg rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 uppercase font-display text-center shadow-lg"
               id="hero_cta_btn"
             >
               <span>QUERO MEU ACESSO (R$ 25,00)</span>
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 shrink-0" />
             </a>
 
-            <span className="text-xs text-zinc-500 mt-4 font-normal">
-              ⚡ Acesso liberado imediatamente • Garantia Incondicional de 7 Dias
-            </span>
+            <div className="flex items-center justify-center gap-3 text-[11px] text-zinc-400 mt-3.5">
+              <span className="inline-flex items-center gap-1">
+                <Zap className="w-3 h-3 text-emerald-400" /> Liberação Imediata
+              </span>
+              <span>•</span>
+              <span className="inline-flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-400" /> Garantia de 7 Dias
+              </span>
+            </div>
           </div>
 
         </section>
 
-        {/* --- SEÇÃO 2: VITRINE DE JOGOS + ACERVO EXPANDIDO PARA +7.000 CLÁSSICOS --- */}
-        <section className="py-24 md:py-32 px-4 max-w-6xl mx-auto border-t border-white/5" id="vitrine">
+        {/* --- SEÇÃO 2: VITRINE DE JOGOS (CARROSSEL DESLIZÁVEL / GRID RESPONSIVO) --- */}
+        <section className="py-10 sm:py-16 px-4 max-w-6xl mx-auto border-t border-white/5" id="vitrine">
           
-          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
-              Catálogo de Clássicos Definitivo
+          <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12 space-y-2">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-emerald-400">
+              Catálogo de Clássicos em HD
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white">
-              Mais de 7.000 Clássicos que Marcaram Época
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              +7.000 Jogos Prontos e Organizados
             </h2>
-            <p className="text-sm md:text-base text-zinc-400 font-light">
-              Títulos testados e compactados, prontos para rodar com carregamento rápido e capas em alta definição.
+            <p className="text-xs sm:text-sm text-zinc-400 font-light">
+              Deslize para ver alguns dos clássicos inclusos com capas originais em alta definição.
             </p>
           </div>
 
-          {/* Grid de capas estilo catálogo Netflix (proporção de pôster 3:4) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5">
+          {/* Carrossel Deslizável Horizontal no Mobile (snap-x scrollbar-none) & Grid no Desktop */}
+          <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 overflow-x-auto snap-x scrollbar-none pb-3 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
             {NETFLIX_GAMES.map((game) => (
               <div 
                 key={game.id}
-                className="group flex flex-col items-center cursor-pointer"
+                className="group flex flex-col items-center shrink-0 w-[140px] sm:w-auto snap-center"
               >
-                {/* Poster 3:4 com cantos arredondados e borda sutil */}
+                {/* Poster 3:4 com cantos arredondados */}
                 <div className="w-full aspect-[3/4] bg-[#0f141c] border border-white/5 rounded-xl overflow-hidden p-2 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:border-white/20 group-hover:shadow-xl">
                   <img 
                     src={game.cover} 
                     alt={`Capa de ${game.title}`}
                     referrerPolicy="no-referrer"
+                    loading="lazy"
                     className="w-full h-full object-contain filter drop-shadow-md transition-transform duration-300"
                   />
                 </div>
 
-                {/* Nome do jogo discreto abaixo */}
-                <h3 className="text-xs sm:text-sm font-medium text-zinc-300 mt-3 text-center truncate w-full group-hover:text-white transition-colors">
+                {/* Nome do jogo */}
+                <h3 className="text-xs font-medium text-zinc-300 mt-2 text-center truncate w-full group-hover:text-white transition-colors">
                   {game.title}
                 </h3>
               </div>
             ))}
           </div>
 
-          {/* Barra/Grid Visual destacando as 5 Plataformas Retrô Inclusas logo abaixo da vitrine */}
-          <div className="mt-14 pt-10 border-t border-white/5">
-            <div className="text-center mb-6">
+          {/* 5 Plataformas Retrô Inclusas */}
+          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/5">
+            <div className="text-center mb-4 sm:mb-6">
               <span className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
-                5 Plataformas Inclusas no Pacote (+7.000 Jogos)
+                5 Plataformas Inclusas (+7.000 Jogos Prontos)
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3">
               {RETRO_PLATFORMS.map((plat) => (
                 <div 
                   key={plat.id}
-                  className="bg-[#0f141c] border border-white/5 rounded-xl p-4 flex flex-col justify-between hover:border-white/15 transition-all text-left"
+                  className="bg-[#0f141c] border border-white/5 rounded-xl p-3 sm:p-4 flex items-start gap-3 sm:flex-col sm:justify-between hover:border-white/15 transition-all text-left"
                 >
+                  <span className="text-2xl sm:text-xl shrink-0">{plat.emoji}</span>
                   <div>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-base">{plat.emoji}</span>
-                      <span className="text-xs font-bold text-white tracking-tight">
-                        [{plat.tag}]
-                      </span>
+                    <div className="text-xs font-bold text-white tracking-tight mb-0.5">
+                      [{plat.tag}]
                     </div>
-                    <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                    <p className="text-[11px] text-zinc-400 font-light leading-snug">
                       {plat.title}
                     </p>
                   </div>
@@ -327,80 +326,80 @@ export default function App() {
 
         </section>
 
-        {/* --- SEÇÃO 3: COMO FUNCIONA (ULTRA-SIMPLES E VISUAL) --- */}
-        <section className="py-24 md:py-32 px-4 max-w-5xl mx-auto border-t border-white/5" id="como-funciona">
+        {/* --- SEÇÃO 3: COMO FUNCIONA (3 PASSOS RÁPIDOS) --- */}
+        <section className="py-10 sm:py-16 px-4 max-w-5xl mx-auto border-t border-white/5" id="como-funciona">
           
-          <div className="text-center max-w-xl mx-auto mb-16 space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
-              100% Plug & Play
+          <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12 space-y-2">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-emerald-400">
+              Zero Complicação
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               Como Funciona?
             </h2>
-            <p className="text-sm text-zinc-400 font-light">
-              Sem complicação técnica. Sem precisar entender de computador. É só plugar no console e jogar.
+            <p className="text-xs sm:text-sm text-zinc-400 font-light">
+              Em menos de 3 minutos seus jogos já estão rodando.
             </p>
           </div>
 
-          {/* 3 Passos Ilustrados com Ícones Grandes de Pendrive, Console e Controle */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* 3 Passos Ilustrados */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-6">
             
-            {/* Passo 1: [Ícone de Pendrive] -> Coloque os jogos no Pendrive */}
-            <div className="bg-[#0f141c] border border-white/5 rounded-2xl p-8 flex flex-col justify-between hover:border-white/15 transition-all">
+            {/* Passo 1 */}
+            <div className="bg-[#0f141c] border border-white/5 rounded-2xl p-5 sm:p-7 flex flex-col justify-between hover:border-white/15 transition-all">
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-200">
-                    <Usb className="w-7 h-7" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400">
+                    <Usb className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <span className="text-zinc-500 font-mono text-xs font-bold tracking-widest uppercase">
+                  <span className="text-zinc-500 font-mono text-[11px] font-bold tracking-widest uppercase">
                     Passo 01
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Coloque os jogos no Pendrive
+                <h3 className="text-base sm:text-lg font-bold text-white mb-1">
+                  1. Coloque os jogos no Pendrive
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
-                  Arquivos já prontos e mastigados.
+                <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                  Arquivos testados e compactados, com capinhas já configuradas.
                 </p>
               </div>
             </div>
 
-            {/* Passo 2: [Ícone de Console PS2] -> Plugue no seu Console */}
-            <div className="bg-[#0f141c] border border-white/5 rounded-2xl p-8 flex flex-col justify-between hover:border-white/15 transition-all">
+            {/* Passo 2 */}
+            <div className="bg-[#0f141c] border border-white/5 rounded-2xl p-5 sm:p-7 flex flex-col justify-between hover:border-white/15 transition-all">
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-200">
-                    <Tv className="w-7 h-7" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400">
+                    <Tv className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <span className="text-zinc-500 font-mono text-xs font-bold tracking-widest uppercase">
+                  <span className="text-zinc-500 font-mono text-[11px] font-bold tracking-widest uppercase">
                     Passo 02
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Plugue no seu Console
+                <h3 className="text-base sm:text-lg font-bold text-white mb-1">
+                  2. Plugue no seu Aparelho
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
-                  Direto na porta USB do seu PlayStation 2.
+                <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                  Conecte na entrada USB do seu PS2, PC, Notebook ou TV Box.
                 </p>
               </div>
             </div>
 
-            {/* Passo 3: [Ícone de Controle Gamer] -> Ligue e Jogue! */}
-            <div className="bg-[#0f141c] border border-white/5 rounded-2xl p-8 flex flex-col justify-between hover:border-white/15 transition-all">
+            {/* Passo 3 */}
+            <div className="bg-[#0f141c] border border-white/5 rounded-2xl p-5 sm:p-7 flex flex-col justify-between hover:border-white/15 transition-all">
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-200">
-                    <Gamepad2 className="w-7 h-7" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400">
+                    <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <span className="text-zinc-500 font-mono text-xs font-bold tracking-widest uppercase">
+                  <span className="text-zinc-500 font-mono text-[11px] font-bold tracking-widest uppercase">
                     Passo 03
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Ligue e Jogue!
+                <h3 className="text-base sm:text-lg font-bold text-white mb-1">
+                  3. Ligue e Jogue!
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
-                  Mais de 7.000 clássicos na tela com capinha.
+                <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                  Escolha qualquer um dos +7.000 títulos e divirta-se na hora.
                 </p>
               </div>
             </div>
@@ -409,12 +408,12 @@ export default function App() {
 
         </section>
 
-        {/* --- SEÇÃO 4: CARD DE PREÇO (FOCO TOTAL DA PÁGINA) --- */}
-        <section className="py-24 md:py-32 px-4 max-w-3xl mx-auto border-t border-white/5" id="oferta">
+        {/* --- SEÇÃO 4: CARD DE OFERTA DE ALTA CONVERSÃO (R$ 25,00) --- */}
+        <section className="py-10 sm:py-16 px-4 max-w-2xl mx-auto border-t border-white/5" id="oferta">
           
-          {/* Contador de urgência discreto */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/5 border border-white/5 text-xs text-zinc-300 mx-auto mb-8 justify-center w-full max-w-sm">
-            <Clock className="w-3.5 h-3.5 text-zinc-400" />
+          {/* Contador de urgência */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/5 text-[11px] sm:text-xs text-zinc-300 mx-auto mb-6 justify-center w-full max-w-xs">
+            <Clock className="w-3.5 h-3.5 text-emerald-400" />
             <span>Condição promocional expira em:</span>
             <span className="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded text-xs">
               {formatTime(secondsLeft)}
@@ -422,99 +421,118 @@ export default function App() {
           </div>
 
           {/* Card Principal de Oferta */}
-          <div className="bg-[#0f141c] border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#0f141c] border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
             
-            <div className="text-center space-y-3 mb-8">
-              <span className="text-xs font-bold uppercase tracking-widest text-zinc-400">
-                Acesso Completo & Vitalício
+            <div className="text-center space-y-2 mb-6">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-400">
+                Acesso Vitalício & Imediato
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
                 Kit Mago Gamer VIP
               </h3>
               <p className="text-xs sm:text-sm text-zinc-400 font-light max-w-md mx-auto">
-                Sem complicação técnica. Sem precisar entender de computador. É só plugar no console e jogar.
+                Tudo configurado para você plugar e jogar sem estresse técnico.
               </p>
             </div>
 
-            {/* Checklist de Benefícios Diretos */}
-            <div className="max-w-md mx-auto space-y-3.5 mb-10 text-xs sm:text-sm text-zinc-300">
-              <div className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <span>Mais de 7.000 jogos clássicos prontos para usar</span>
+            {/* Checklist de Benefícios */}
+            <div className="max-w-md mx-auto space-y-2.5 sm:space-y-3 mb-8 text-xs sm:text-sm text-zinc-200">
+              <div className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>+7.000 jogos clássicos organizados e prontos</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <span>Funciona em qualquer PlayStation 2</span>
+              <div className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>Compatível com PS2 (Fat e Slim), PC, Celular e TV Box</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <span>Não precisa de leitor nem de peças caras</span>
+              <div className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>Não precisa de leitor de disco nem peças caras</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <span>Vídeo rápido de 3 minutos mostrando como plugar e jogar</span>
+              <div className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>Tutorial rápido em vídeo de 3 minutos passo a passo</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <span>Acesso vitalício imediato</span>
+              <div className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>Suporte direto no WhatsApp para tirar dúvidas</span>
               </div>
             </div>
 
-            {/* Bloco de Preço: De R$ 97,00 por apenas R$ 25,00 */}
-            <div className="text-center pt-6 border-t border-white/5 max-w-md mx-auto">
+            {/* Bloco de Preço: De R$ 97,00 por R$ 25,00 */}
+            <div className="text-center pt-5 border-t border-white/5 max-w-md mx-auto">
               <span className="text-xs text-zinc-400 line-through block">
                 De R$ 97,00
               </span>
               
-              <div className="flex items-baseline justify-center gap-1.5 my-2">
-                <span className="text-sm font-semibold text-zinc-400">por apenas</span>
+              <div className="flex items-baseline justify-center gap-1 my-1.5">
+                <span className="text-xs sm:text-sm font-semibold text-zinc-400">por apenas</span>
                 <span className="text-xs text-zinc-400 font-bold">R$</span>
-                <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                <span className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
                   25,00
                 </span>
               </div>
 
-              <span className="text-[11px] text-zinc-400 font-medium uppercase tracking-wider block mb-6">
-                Pagamento único • Acesso imediato
+              <span className="text-[11px] text-zinc-400 font-medium uppercase tracking-wider block mb-5">
+                Pagamento Único • Sem Mensalidades
               </span>
 
-              {/* Botão de Compra Verde Neon com Sombra Suave e Redirecionamento Direto */}
+              {/* Botão Primário: Checkout Cakto (50% OFF) */}
               <a
                 href={CAKTO_CHECKOUT_URL}
                 onClick={() => trackInitiateCheckout()}
-                className="neon-pulse-btn w-full py-4 px-6 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-base rounded-xl transition-all duration-200 hover:scale-102 active:scale-98 cursor-pointer uppercase font-display tracking-wide flex items-center justify-center gap-2 text-center"
+                className="neon-pulse-btn w-full py-4 px-5 bg-[#10B981] hover:bg-[#059669] text-zinc-950 font-extrabold text-sm sm:text-base rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer uppercase font-display tracking-wide flex items-center justify-center gap-2 text-center shadow-lg"
                 id="oferta_cta_btn"
               >
-                <span>QUERO MEU ACESSO (R$ 25,00)</span>
-                <ArrowRight className="w-5 h-5" />
+                <span>COMPRAR MEU ACESSO COM 50% OFF</span>
+                <ArrowRight className="w-5 h-5 shrink-0" />
               </a>
 
-              {/* Botão Secundário WhatsApp / Pix Direto */}
+              {/* Botão Secundário: WhatsApp / Pix Direto */}
               <a
                 href={WHATSAPP_PIX_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full mt-3 py-3 px-4 rounded-xl border border-emerald-500/25 hover:border-emerald-500/50 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-center leading-snug"
+                className="w-full mt-3 py-3 px-4 rounded-xl border border-emerald-500/25 hover:border-emerald-500/50 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 text-center"
                 id="oferta_whatsapp_pix_btn"
               >
                 <MessageCircle className="w-4 h-4 shrink-0 text-[#25D366]" />
-                <span>Prefere pagar via Pix direto ou tem dúvidas? Fale conosco no WhatsApp</span>
+                <span>Prefere pagar via Pix direto? Fale no WhatsApp</span>
               </a>
 
               <p className="text-[11px] text-zinc-400 mt-4">
-                🔒 Pagamento 100% seguro com liberação imediata por e-mail.
+                🔒 Pagamento 100% seguro com liberação imediata no seu e-mail.
               </p>
             </div>
 
           </div>
 
-          {/* Garantia Discreta */}
-          <div className="mt-12 text-center max-w-lg mx-auto p-6 rounded-2xl bg-[#0f141c] border border-white/5">
-            <div className="flex items-center justify-center gap-2 mb-2 text-zinc-300">
-              <ShieldCheck className="w-4 h-4 text-zinc-400" />
+          {/* 3 Ícones Compactos em Linha de Segurança / Garantia */}
+          <div className="grid grid-cols-3 gap-2 mt-6 max-w-2xl mx-auto">
+            <div className="bg-[#0f141c] border border-white/5 rounded-xl p-3 text-center flex flex-col items-center justify-center">
+              <Zap className="w-4 h-4 text-emerald-400 mb-1" />
+              <span className="text-[10px] sm:text-xs font-bold text-zinc-200 leading-tight">Acesso Imediato</span>
+              <span className="text-[9px] text-zinc-400 mt-0.5">Envio no e-mail</span>
+            </div>
+            <div className="bg-[#0f141c] border border-white/5 rounded-xl p-3 text-center flex flex-col items-center justify-center">
+              <Headphones className="w-4 h-4 text-emerald-400 mb-1" />
+              <span className="text-[10px] sm:text-xs font-bold text-zinc-200 leading-tight">Suporte WhatsApp</span>
+              <span className="text-[9px] text-zinc-400 mt-0.5">Ajuda rápida</span>
+            </div>
+            <div className="bg-[#0f141c] border border-white/5 rounded-xl p-3 text-center flex flex-col items-center justify-center">
+              <Download className="w-4 h-4 text-emerald-400 mb-1" />
+              <span className="text-[10px] sm:text-xs font-bold text-zinc-200 leading-tight">Download Seguro</span>
+              <span className="text-[9px] text-zinc-400 mt-0.5">100% testado</span>
+            </div>
+          </div>
+
+          {/* Garantia Incondicional de 7 Dias */}
+          <div className="mt-6 text-center max-w-lg mx-auto p-4 sm:p-6 rounded-2xl bg-[#0f141c] border border-white/5">
+            <div className="flex items-center justify-center gap-2 mb-1.5 text-zinc-300">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span className="text-xs font-bold uppercase tracking-wider">Garantia Incondicional de 7 Dias</span>
             </div>
-            <p className="text-xs text-zinc-400 font-light leading-relaxed">
+            <p className="text-[11px] sm:text-xs text-zinc-400 font-light leading-relaxed">
               Teste o acervo à vontade. Se você não conseguir rodar seus jogos em até 7 dias, devolvemos 100% do seu dinheiro.
             </p>
           </div>
@@ -523,12 +541,12 @@ export default function App() {
       </main>
 
       {/* --- FOOTER ELEGANTE E MINIMALISTA --- */}
-      <footer className="border-t border-white/5 py-12 px-4 text-center text-xs text-zinc-400 space-y-3">
+      <footer className="border-t border-white/5 py-8 sm:py-10 px-4 text-center text-xs text-zinc-400 space-y-2.5">
         <div className="flex items-center justify-center gap-1.5 font-medium text-zinc-300">
-          <Gamepad2 className="w-4 h-4 text-zinc-400" />
+          <Gamepad2 className="w-4 h-4 text-emerald-400" />
           <span>Mago Gamer Oficial © {new Date().getFullYear()}</span>
         </div>
-        <p className="max-w-md mx-auto font-light leading-relaxed">
+        <p className="max-w-md mx-auto font-light leading-relaxed text-[11px]">
           Uso estritamente nostálgico e educacional para preservação de mídias históricas. PlayStation é marca registrada da Sony Interactive Entertainment.
         </p>
         <span className="block text-[10px] text-zinc-400">
@@ -536,39 +554,39 @@ export default function App() {
         </span>
       </footer>
 
-      {/* --- NOTIFICAÇÃO SUTIL (SEM POLUIÇÃO VISUAL) --- */}
+      {/* --- NOTIFICAÇÃO SUTIL NO MOBILE --- */}
       <div 
-        className={`fixed bottom-5 left-5 z-40 max-w-xs bg-[#0f141c] border border-white/10 rounded-xl p-3.5 shadow-2xl transition-all duration-500 transform ${
+        className={`fixed bottom-24 left-4 z-40 max-w-[280px] bg-[#0f141c]/95 border border-white/10 rounded-xl p-3 shadow-2xl backdrop-blur-md transition-all duration-500 transform ${
           showToast ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'
         }`}
       >
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
+        <div className="flex items-center gap-2.5">
+          <div className="w-2 h-2 rounded-full bg-[#10B981] animate-ping shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-medium text-zinc-200 truncate">
-              {currentToastIndex === 0 && "Marcos de Porto Alegre/RS liberou acesso"}
-              {currentToastIndex === 1 && "Felipe de São Paulo/SP plugou o pendrive e jogou"}
-              {currentToastIndex === 2 && "Juliano de Curitiba/PR ativou os 7.000 clássicos"}
-              {currentToastIndex === 3 && "Rodrigo de Salvador/BA jogou Bomba Patch"}
+              {currentToastIndex === 0 && "Marcos (Porto Alegre/RS) liberou acesso"}
+              {currentToastIndex === 1 && "Felipe (São Paulo/SP) plugou e jogou"}
+              {currentToastIndex === 2 && "Juliano (Curitiba/PR) ativou os 7.000 jogos"}
+              {currentToastIndex === 3 && "Rodrigo (Salvador/BA) jogou Bomba Patch"}
             </p>
-            <p className="text-[10px] text-zinc-400">Acesso VIP liberado com sucesso</p>
+            <p className="text-[10px] text-emerald-400">Acesso VIP liberado com sucesso</p>
           </div>
         </div>
       </div>
 
-      {/* --- BOTÃO FLUTUANTE DE WHATSAPP FIXO (CANTO INFERIOR DIREITO) --- */}
+      {/* --- BOTÃO FLUTUANTE DE WHATSAPP MOBILE (56x56px, #25D366, PULSE) --- */}
       <a
         href={WHATSAPP_GENERAL_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 group focus:outline-none"
+        className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 group focus:outline-none"
         aria-label="Tire dúvidas no WhatsApp"
         id="floating_whatsapp_btn"
       >
-        <span className="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full bg-[#0f141c]/95 border border-emerald-500/30 text-xs font-medium text-emerald-300 shadow-xl backdrop-blur-md transition-all group-hover:border-emerald-400 group-hover:bg-[#151c27]">
+        <span className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full bg-[#0f141c]/95 border border-emerald-500/30 text-xs font-medium text-emerald-300 shadow-xl backdrop-blur-md transition-all group-hover:border-emerald-400 group-hover:bg-[#151c27]">
           Tire dúvidas no WhatsApp
         </span>
-        <div className="relative flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] text-white shadow-[0_4px_24px_rgba(37,211,102,0.4)] transition-all duration-300 group-hover:scale-110 group-active:scale-95">
+        <div className="relative flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] text-white shadow-2xl shadow-emerald-950/60 transition-all duration-300 group-hover:scale-105 group-active:scale-95">
           <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-30 animate-ping" />
           <MessageCircle className="w-7 h-7 relative z-10 fill-current text-white" />
         </div>
