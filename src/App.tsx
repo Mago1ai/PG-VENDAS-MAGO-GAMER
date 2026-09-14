@@ -9,7 +9,8 @@ import {
   Clock,
   Sparkles,
   Tv,
-  Usb
+  Usb,
+  MessageCircle
 } from "lucide-react";
 
 declare global {
@@ -26,6 +27,8 @@ const trackInitiateCheckout = () => {
 };
 
 const CAKTO_CHECKOUT_URL = "https://pay.cakto.com.br/en8u7oi_293089";
+const WHATSAPP_GENERAL_URL = "https://wa.me/5531987086362?text=Oi,%20estou%20na%20p%C3%A1gina%20do%20Mago%20Gamer%20e%20quero%20tirar%20uma%20d%C3%BAvida%20sobre%20os%20jogos";
+const WHATSAPP_PIX_URL = "https://wa.me/5531987086362?text=Oi,%20quero%20comprar%20o%20Kit%20Mago%20Gamer%20VIP%20no%20Pix%20direto";
 
 // The 5 Retro Platforms (+7.000 games)
 const RETRO_PLATFORMS = [
@@ -180,9 +183,20 @@ export default function App() {
             </span>
           </div>
 
-          <span className="text-[11px] font-medium text-zinc-400 tracking-wider uppercase px-3 py-1 rounded-full bg-white/5 border border-white/5">
-            100% Plug & Play • Jogue pelo Pendrive
-          </span>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <span className="hidden md:inline-block text-[11px] font-medium text-zinc-400 tracking-wider uppercase px-3 py-1 rounded-full bg-white/5 border border-white/5">
+              100% Plug & Play • Jogue pelo Pendrive
+            </span>
+            <a
+              href={WHATSAPP_GENERAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 hover:border-emerald-500/35 transition-all"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Suporte / WhatsApp</span>
+            </a>
+          </div>
         </div>
       </header>
 
@@ -475,6 +489,18 @@ export default function App() {
                 <ArrowRight className="w-5 h-5" />
               </a>
 
+              {/* Botão Secundário WhatsApp / Pix Direto */}
+              <a
+                href={WHATSAPP_PIX_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full mt-3 py-3 px-4 rounded-xl border border-emerald-500/25 hover:border-emerald-500/50 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 text-center leading-snug"
+                id="oferta_whatsapp_pix_btn"
+              >
+                <MessageCircle className="w-4 h-4 shrink-0 text-[#25D366]" />
+                <span>Prefere pagar via Pix direto ou tem dúvidas? Fale conosco no WhatsApp</span>
+              </a>
+
               <p className="text-[11px] text-zinc-400 mt-4">
                 🔒 Pagamento 100% seguro com liberação imediata por e-mail.
               </p>
@@ -529,6 +555,24 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {/* --- BOTÃO FLUTUANTE DE WHATSAPP FIXO (CANTO INFERIOR DIREITO) --- */}
+      <a
+        href={WHATSAPP_GENERAL_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 group focus:outline-none"
+        aria-label="Tire dúvidas no WhatsApp"
+        id="floating_whatsapp_btn"
+      >
+        <span className="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full bg-[#0f141c]/95 border border-emerald-500/30 text-xs font-medium text-emerald-300 shadow-xl backdrop-blur-md transition-all group-hover:border-emerald-400 group-hover:bg-[#151c27]">
+          Tire dúvidas no WhatsApp
+        </span>
+        <div className="relative flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] text-white shadow-[0_4px_24px_rgba(37,211,102,0.4)] transition-all duration-300 group-hover:scale-110 group-active:scale-95">
+          <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-30 animate-ping" />
+          <MessageCircle className="w-7 h-7 relative z-10 fill-current text-white" />
+        </div>
+      </a>
 
       {/* --- CHECKOUT EXPRESS MODAL --- */}
       {showCheckoutModal && (
