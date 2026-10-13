@@ -359,41 +359,10 @@ export default function App() {
     return PRESERVED_COLLECTION.filter(item => item.category === activeTab);
   }, [activeTab]);
 
-  // Submissão do Acesso VIP
+  // Submissão do Acesso VIP redireciona direto para o checkout oficial
   const handleSupportSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!userName.trim() || !userEmail.trim()) return;
-
-    setIsSavingToken(true);
-    const tokenCode = "MAGO-VIP-" + Math.floor(100000 + Math.random() * 900000);
-    setGeneratedToken(tokenCode);
-
-    try {
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/tokens`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-          "Prefer": "return=minimal"
-        },
-        body: JSON.stringify({
-          code: tokenCode,
-          name: `${userName.trim()} (${userEmail.trim()})`,
-          created_at: new Date().toISOString(),
-          active: true
-        })
-      });
-
-      if (!response.ok) {
-        console.warn("Aviso na gravação Supabase, fallback liberado.");
-      }
-    } catch (err) {
-      console.warn("Conexão fallback com banco:", err);
-    } finally {
-      setIsSavingToken(false);
-      setCheckoutStep("success");
-    }
+    redirectToCheckout("form_footer");
   };
 
   return (

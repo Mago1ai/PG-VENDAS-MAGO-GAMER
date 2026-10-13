@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termos de Serviço - Mago Post</title>
+  <meta name="description" content="Termos de Serviço do aplicativo Mago Post para gestão e publicação de vídeos no TikTok pela organização Casa Kame." />
+  <link rel="icon" type="image/svg+xml" href="/icons/ps2.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --card-bg: rgba(18, 22, 34, 0.75);
+      --card-border: rgba(99, 102, 241, 0.18);
+      --accent-glow: #6366f1;
+      --accent-neon: #a855f7;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-sub: #cbd5e1;
+      --tag-bg: rgba(99, 102, 241, 0.12);
+      --tag-border: rgba(99, 102, 241, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      padding: 2.5rem 1.25rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 860px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: #c7d2fe;
+      font-size: 0.825rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .update-date {
+      color: #818cf8;
+      font-weight: 500;
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2.25rem 2rem;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 1.75rem;
+    }
+
+    .section:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .section-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    p {
+      color: var(--text-sub);
+      font-size: 0.975rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .scopes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      list-style: none;
+    }
+
+    .scopes-list li {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #c7d2fe;
+      padding: 0.3rem 0.75rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .contact-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px dashed rgba(99, 102, 241, 0.4);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #a5b4fc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      .content-card {
+        padding: 1.5rem 1.25rem;
+      }
+      h1 {
+        font-size: 1.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        TikTok for Developers &bull; Legal
+      </div>
+      <h1>Termos de Serviço</h1>
+      <p class="subtitle">Aplicativo <strong>Mago Post</strong> &bull; Atualizado em: <span class="update-date">Outubro de 2026</span></p>
+    </header>
+
+    <main class="content-card">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <h2>Visão Geral</h2>
+        </div>
+        <p>
+          O aplicativo <strong>Mago Post</strong> é uma ferramenta proprietária de gestão, automação editorial e publicação de conteúdo em formato de vídeo no TikTok desenvolvida para a organização <strong>Casa Kame</strong>.
+        </p>
+        <p>
+          Ao utilizar a integração do Mago Post com a API oficial do TikTok, você concorda expressamente em cumprir estes Termos de Serviço e todas as normas operacionais aplicáveis.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <h2>Integração e Permissões do TikTok</h2>
+        </div>
+        <p>
+          Ao autenticar sua conta através do <strong>Login Kit oficial do TikTok</strong>, o usuário autoriza o aplicativo a realizar o gerenciamento técnico, agendamento programado e envio automatizado de arquivos de mídia estritamente de acordo com os escopos autorizados:
+        </p>
+        <ul class="scopes-list">
+          <li>user.info.basic</li>
+          <li>video.upload</li>
+          <li>video.publish</li>
+        </ul>
+        <p style="margin-top: 0.85rem;">
+          Nenhum dado adicional além dos explicitamente concedidos pelo usuário durante o fluxo de autorização OAuth será acessado ou processado.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <h2>Responsabilidade do Usuário e Direitos Autorais</h2>
+        </div>
+        <p>
+          O usuário e criador declara e garante possuir todos os direitos autorais, licenças e autorizações necessárias sobre os vídeos, áudios e textos submetidos através do Mago Post.
+        </p>
+        <p>
+          O usuário compromete-se de forma inegociável a cumprir integralmente os <strong>Termos de Serviço e as Diretrizes da Comunidade do TikTok</strong>, sendo vedada a submissão de conteúdo ilícito, infrator de propriedade intelectual ou danoso a terceiros.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <h2>Limitação de Responsabilidade</h2>
+        </div>
+        <p>
+          O Mago Post opera dentro dos limites técnicos, cotas e diretrizes fornecidas pela API oficial do TikTok.
+        </p>
+        <p>
+          Não nos responsabilizamos por interrupções temporárias decorrentes de manutenção na infraestrutura do TikTok, instabilidades de rede de terceiros, revogação de tokens pelo usuário ou alterações unilaterais nas políticas e limites de API da plataforma TikTok.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <h2>Contato e Suporte</h2>
+        </div>
+        <p>
+          Para dúvidas operacionais, esclarecimentos jurídicos ou solicitações de suporte relativas ao aplicativo Mago Post, entre em contato direto com a equipe responsável:
+        </p>
+        <div class="contact-box">
+          <p><strong>Organização:</strong> Casa Kame</p>
+          <p><strong>Suporte Técnico:</strong> contatosbot01@gmail.com</p>
+          <p><strong>Aplicação:</strong> Mago Post &bull; pg-vendas-mago-gamer.vercel.app</p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="nav-links">
+        <a href="/">Página Inicial</a>
+        <a href="/privacidade.html">Política de Privacidade</a>
+      </div>
+      <p>&copy; 2026 Casa Kame &bull; Mago Post. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+</body>
+</html>
