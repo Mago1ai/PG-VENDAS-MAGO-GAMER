@@ -13,15 +13,33 @@ import {
   Key, 
   Globe, 
   ShieldCheck, 
-  RefreshCw,
+  UserCheck,
   ExternalLink
 } from "lucide-react";
+
+const REDIRECT_PRESETS = [
+  {
+    label: "URL Web do Painel (Recomendada)",
+    url: "https://pg-vendas-mago-gamer.vercel.app/",
+  },
+  {
+    label: "Callback Rota API",
+    url: "https://pg-vendas-mago-gamer.vercel.app/api/auth/tiktok/callback",
+  },
+  {
+    label: "Página de Teste Direta",
+    url: "https://pg-vendas-mago-gamer.vercel.app/tiktok-test",
+  },
+];
 
 export function TikTokAuthTester() {
   const [loading, setLoading] = useState<boolean>(false);
   const [tokenData, setTokenData] = useState<TikTokTokenResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [authCode, setAuthCode] = useState<string | null>(null);
+  const [redirectUri, setRedirectUri] = useState<string>(
+    sessionStorage.getItem("mago_post_redirect_uri") || DEFAULT_TIKTOK_CONFIG.redirectUri
+  );
 
   useEffect(() => {
     // Carrega dados salvos no localStorage (se houver)
@@ -47,16 +65,20 @@ export function TikTokAuthTester() {
 
     if (code) {
       setAuthCode(code);
-      handleExchangeCode(code);
+      const usedRedirectUri = 
+        sessionStorage.getItem("mago_post_redirect_uri") || 
+        window.location.origin + window.location.pathname;
+      handleExchangeCode(code, usedRedirectUri);
     }
   }, []);
 
-  const handleExchangeCode = async (code: string) => {
+  const handleExchangeCode = async (code: string, usedRedirectUri?: string) => {
     setLoading(true);
     setError(null);
     try {
-      console.log("[Mago Post] Trocando code por access_token oficial...");
-      const result = await exchangeCodeForToken(code);
+      const uri = usedRedirectUri || redirectUri;
+      console.log("[Mago Post] Trocando code por access_token com redirectUri:", uri);
+      const result = await exchangeCodeForToken(code, { redirectUri: uri });
       setTokenData(result);
       localStorage.setItem("mago_post_tiktok_auth", JSON.stringify(result));
       console.log("[Mago Post] Token obtido com sucesso. Open ID:", result.open_id);
@@ -71,8 +93,9 @@ export function TikTokAuthTester() {
 
   const handleConnectTikTok = () => {
     try {
-      const { url } = getTikTokAuthUrl();
-      console.log("[Mago Post] Redirecionando para autorização oficial:", url);
+      sessionStorage.setItem("mago_post_redirect_uri", redirectUri);
+      const { url } = getTikTokAuthUrl(undefined, { redirectUri });
+      console.log("[Mago Post] Redirecionando para:", url);
       window.location.href = url;
     } catch (err) {
       setError("Falha ao gerar URL de autorização.");
@@ -81,6 +104,7 @@ export function TikTokAuthTester() {
 
   const handleDisconnect = () => {
     localStorage.removeItem("mago_post_tiktok_auth");
+    sessionStorage.removeItem("mago_post_redirect_uri");
     setTokenData(null);
     setAuthCode(null);
     setError(null);
@@ -100,15 +124,15 @@ export function TikTokAuthTester() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-lg shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FE2C55] to-[#25F4EE] flex items-center justify-center font-bold text-lg shadow-lg">
               🎵
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                Mago Post &bull; TikTok OAuth 2.0
+                Mago Post Dev &bull; Sandbox Tester
               </h1>
               <p className="text-xs sm:text-sm text-slate-400">
-                Módulo de Teste de Integração e Conexão de Contas
+                TikTok for Developers &bull; Conexão OAuth 2.0
               </p>
             </div>
           </div>
@@ -122,10 +146,10 @@ export function TikTokAuthTester() {
         </div>
 
         {/* Informações da Configuração */}
-        <div className="bg-[#0b0e19] border border-white/5 rounded-xl p-4 mb-6 space-y-2 text-xs">
+        <div className="bg-[#0b0e19] border border-white/5 rounded-xl p-4 mb-6 space-y-2.5 text-xs">
           <div className="flex items-center justify-between text-slate-400">
             <span className="flex items-center gap-1.5">
-              <Key className="w-3.5 h-3.5 text-indigo-400" /> Client Key:
+              <Key className="w-3.5 h-3.5 text-indigo-400" /> Client Key (Sandbox):
             </span>
             <code className="bg-indigo-950/50 text-indigo-300 px-2 py-0.5 rounded font-mono">
               {DEFAULT_TIKTOK_CONFIG.clientKey}
@@ -133,19 +157,51 @@ export function TikTokAuthTester() {
           </div>
           <div className="flex items-center justify-between text-slate-400">
             <span className="flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-indigo-400" /> Redirect URI:
+              <UserCheck className="w-3.5 h-3.5 text-emerald-400" /> Usuário Alvo Autorizado:
             </span>
-            <span className="text-slate-300 font-mono truncate max-w-[280px] sm:max-w-md">
-              {DEFAULT_TIKTOK_CONFIG.redirectUri}
+            <span className="text-emerald-300 font-mono font-bold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
+              @magoplaybr
             </span>
           </div>
           <div className="flex items-center justify-between text-slate-400">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" /> Escopos Ativos:
+              <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" /> Escopos Aprovados no Sandbox:
             </span>
             <span className="text-slate-300 font-mono">
-              user.info.basic, video.upload, video.publish
+              {DEFAULT_TIKTOK_CONFIG.scopes.join(", ")}
             </span>
+          </div>
+
+          {/* Seletor de Redirect URI */}
+          <div className="pt-2 border-t border-white/5 space-y-1.5">
+            <span className="flex items-center gap-1.5 text-slate-400">
+              <Globe className="w-3.5 h-3.5 text-indigo-400" /> Redirect URI (Selecione ou edite):
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+              {REDIRECT_PRESETS.map((preset) => (
+                <button
+                  key={preset.url}
+                  type="button"
+                  onClick={() => setRedirectUri(preset.url)}
+                  className={`text-[11px] p-2 rounded-lg border text-left transition truncate ${
+                    redirectUri === preset.url
+                      ? "bg-indigo-600/30 border-indigo-400 text-white font-semibold"
+                      : "bg-white/5 border-white/10 text-slate-400 hover:text-slate-200"
+                  }`}
+                  title={preset.url}
+                >
+                  <div className="font-medium truncate">{preset.label}</div>
+                  <div className="font-mono text-[9px] text-slate-500 truncate">{preset.url}</div>
+                </button>
+              ))}
+            </div>
+            <input
+              type="text"
+              value={redirectUri}
+              onChange={(e) => setRedirectUri(e.target.value)}
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-2.5 py-1.5 text-slate-200 font-mono text-xs focus:outline-none focus:border-indigo-400"
+              placeholder="https://pg-vendas-mago-gamer.vercel.app/"
+            />
           </div>
         </div>
 
@@ -225,10 +281,10 @@ export function TikTokAuthTester() {
               className="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-gradient-to-r from-[#FE2C55] via-[#25F4EE] to-[#FE2C55] text-white shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2.5 transform active:scale-[0.99]"
             >
               <ExternalLink className="w-4 h-4" />
-              Conectar Conta TikTok Oficial
+              Conectar Conta TikTok (@magoplaybr)
             </button>
             <p className="text-center text-[11px] text-slate-400">
-              Você será redirecionado para a página oficial de consentimento do TikTok.
+              Redirecionando para o TikTok com redirect_uri: <code className="text-indigo-300">{redirectUri}</code>
             </p>
           </div>
         )}
