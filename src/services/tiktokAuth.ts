@@ -58,7 +58,7 @@ export const DEFAULT_TIKTOK_CONFIG: Required<TikTokAuthConfig> = {
   redirectUri: getEnv('TIKTOK_REDIRECT_URI', 'https://pg-vendas-mago-gamer.vercel.app/'),
   scopes: getEnv(
     'TIKTOK_SCOPES',
-    'user.info.basic,user.info.stats,video.list,video.upload'
+    'user.info.basic,user.info.stats,video.list,video.upload,video.publish'
   ).split(','),
 };
 
