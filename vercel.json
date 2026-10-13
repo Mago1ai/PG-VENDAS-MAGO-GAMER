@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/tiktok-test",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/auth/tiktok/callback",
+      "destination": "/index.html"
+    }
+  ]
+}

@@ -24,6 +24,7 @@ import {
   Play
 } from "lucide-react";
 import { getPS2Cover3D } from "./services/coverService";
+import { TikTokAuthTester } from "./components/TikTokAuthTester";
 
 // --- CHECKOUT OFICIAL CAKTO (OFERTA R$ 29,90) ---
 const CAKTO_CHECKOUT_URL = "https://pay.cakto.com.br/fznu843";
@@ -327,6 +328,17 @@ const COMMUNITY_FAQS = [
 ];
 
 export default function App() {
+  // Roteamento condicional para o módulo de teste e callback do TikTok
+  const isTikTokRoute =
+    typeof window !== "undefined" &&
+    (window.location.pathname.startsWith("/tiktok-test") ||
+      window.location.pathname.startsWith("/api/auth/tiktok") ||
+      window.location.search.includes("code="));
+
+  if (isTikTokRoute) {
+    return <TikTokAuthTester />;
+  }
+
   // Estados de Interface
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [activeTab, setActiveTab] = useState<"all" | "action" | "sports" | "fight" | "terror">("all");
@@ -1309,6 +1321,14 @@ export default function App() {
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
+      {/* BOTÃO FLUTUANTE DE TESTE TIKTOK */}
+      <a
+        href="/tiktok-test"
+        className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2 bg-[#101423]/90 hover:bg-[#181f38] border border-indigo-500/40 text-indigo-200 hover:text-white px-3.5 py-2 rounded-full shadow-2xl backdrop-blur-md text-xs font-semibold transition-all hover:scale-105"
+      >
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <span>TikTok OAuth Tester</span>
+      </a>
 
     </div>
   );

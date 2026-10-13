@@ -53,12 +53,12 @@ function getEnv(key: string, fallback: string = ''): string {
 }
 
 export const DEFAULT_TIKTOK_CONFIG: Required<TikTokAuthConfig> = {
-  clientKey: getEnv('TIKTOK_CLIENT_KEY', 'aw0sazygrfshmi64'),
-  clientSecret: getEnv('TIKTOK_CLIENT_SECRET', 'HOvmLelwKmlbF4RU3iEVfBBo6dPzbKpJ'),
+  clientKey: getEnv('TIKTOK_CLIENT_KEY', 'sbawin7m1osalyyvkn'),
+  clientSecret: getEnv('TIKTOK_CLIENT_SECRET', 'dpzMU35GdidzGzXDCQWTTcw3bLLEOIEX'),
   redirectUri: getEnv('TIKTOK_REDIRECT_URI', 'https://pg-vendas-mago-gamer.vercel.app/api/auth/tiktok/callback'),
   scopes: getEnv(
     'TIKTOK_SCOPES',
-    'user.info.basic,user.info.profile,video.upload,video.publish'
+    'user.info.basic,user.info.profile,user.info.stats,video.list,video.upload,video.publish'
   ).split(','),
 };
 
